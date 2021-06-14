@@ -1,0 +1,32 @@
+
+Zeitplan Projekt Muehle SS21
+stand, 14.6.21
+Verantwortlich: Georg Ringwelski
+
+bis 16.6. Schnittstellen 
+- Festlegung aller Schnittstellenmethoden zwischen den beiden (Importierende und Exportierende) 
+beteiligten Teams
+- Implementierung der Schnittstellen in Java
+- Dokumentation der Schnittstellen mit javadoc. Zu jeder Methode muss die Semantik so klar 
+beschrieben werden, dass sie von aussenstehenden getestet werden kann
+- upload der java-Dateien in github
+
+bis 23.6. Tests
+- auf der Basis der Schnittstellenebschreibung realisiert jedes Team eine Testklasse für die von ihm 
+zu testende Kompnenten
+- es werden genau die Methoden getestet, die in den Shcnittstellen dokumentiret sind. 
+- die Tests sollten mit Dummy-Implementierungen ausfürhbar sein. Natürlich scheitern sie zunächst
+- upload der Tests in github
+
+bis 24.6. Erste Implementierung der Schnittstellen
+- erstellen Sie Klassen zu den definierten Schnittellen
+- testen Sie nach dem 23.6. diese Klassen mit den Tests eines anderen Teams
+- upload der ersten Implementierung
+
+bis 30.6. Projektfertigstellung
+- Verbessern Sie Ihren Code so, dass alle Tests erfolgreich sind. 
+- aktualisieren sie das System auf github, wenn Sie sicher sind, dass alle tests erfolgreich sind
+ergänzen Sie ggf. auch neue Tests, die Sie implementiert haben
+- Führen Sie für Ihre Komponente bzw. das Gesamtsystem selbst Integrationstests und 
+Systemtests durch 
+

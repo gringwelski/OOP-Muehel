@@ -1,0 +1,55 @@
+
+Aufgabenverteilung Projekt Muehle SS21
+stand, 14.6.21
+Verantwortlich: Georg Ringwelski
+
+Zur Realsierung arbeiten wir in 2-er Teams:
+
+Team 1: Lapychak, Kießling
+Team 2: Piasecki, Raak
+Team 3: Dienel, Cebulla
+---------------------------------------------------
+Das System wird in drei Komponenten realisiert, zwischen jedem Komponentenpaar 
+gibt es mindestens eine Schnittstelle:
+
+GUI:
+- graphische Benutzerschnittstelle
+- Spielsteine werden mit Maussteuerung gesetzt/geschoben
+
+Spiel
+- die Implementierung der Spiellogik
+- Abspeichern Vergangener Spiele, User, Bestenliste
+- mit Auswahl ob im 2-Spieler-Modus oder alleine gegen den Computer gespielt wird,
+Auswahl Farbe, Abfrage der Spielernamen
+
+Spieler
+- es gibt zwei mögliche Varianten: Spielzüge werden via GUI gesteuert oder durch 
+eingebauten Algorithmus
+-----------------------------------------------------------
+Zusändigkeiten
+
+jedes Team ist zuständig für die Implementierung einer Komponente und den Test einer 
+anderen Komponente. Was implementiert bzw. getestet werden muss ist den Schnittstellen
+zu entnehmen. Die Schnittstellen dürfen daher nur "im Notfall" und vor allem nur
+in Absprache mit allen Beteiligten geändert werden
+
+Team 1: Implementierung GUI, Tests von Spiel
+Team 2: Implementierug Spiel, Tests von Spieler
+Team 3: Implementierung Spieler; Tests von GUI (Hierzu ist der Einsatz eines geeigneten 
+Werkzeugs wie zB TestFX notwendig)
+
+----------------------------------------------------------
+Versionsverwaltung
+
+Wir nutzen ein gemeinsames Repository auf github: 
+https://github.com/gringwelski/OOP-Muehle.git 
+
+Dort sind alle Dateien zu finden, die einen brauchbaren Entwicklungsstand haben. Das 
+Versionsverwaltungssystem git wird dabei eingesetzt, um Konflikte zu auflösbar zu machen.
+Eingige Grundregeln bei der benutzung eines gemeinsamen Repositoy:
+- Bevor Sie anfangen zu arbeiten laden Sie sich immer zuerst die aktuelle Version aller Dateien runter
+- Laden Sie nur code hoch, der auf Ihrem Rechner mit möglichst aktuellem Fremdcode übersetzt werden kann
+- Hier finden Sie noch ein paar mehr Tipps: http://www.schippel.at/10-best-practice-regeln-fuer-versionsverwaltung/
+
+
+ 
