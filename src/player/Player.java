@@ -1,7 +1,9 @@
 package src.player;
 
 import src.common.Move;
+import src.common.PlayerColor;
 import src.game.GameLogic;
+import src.gui.GUIPlayer;
 
 public interface Player {
   /**
@@ -9,10 +11,11 @@ public interface Player {
    *
    * @param ai boolean if the player should be an ai or not
    * @param name name of the player
+   * @param color color of the player
    * @param game running instance of {@link GameLogic}
    * @return Instance of {@link Player}
    */
-  static Player create(boolean ai, String name, GameLogic game) {
+  static Player create(boolean ai, String name, PlayerColor color, GameLogic game, GUIPlayer gui) {
     //TODO: Implement logic for creating a player
     return null;
   }
@@ -23,6 +26,13 @@ public interface Player {
    * @return {@link String}, name of current player
    */
   String getName();
+
+  /**
+   * Gets the color of the current player
+   * 
+   * @return player color
+   */
+  PlayerColor getColor();
 
   /**
    * Get if the player is an ai or not
