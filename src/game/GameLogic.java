@@ -1,12 +1,14 @@
 package src.game;
 import src.common.Move;
+import src.common.PlayerColor;
 import src.common.Point;
+import src.common.StoneAction;
 
 public interface GameLogic{
     /**
      * @return a 2 dimensional array in shape of the playfield
      */
-    String[][] getState();
+    PlayerColor[][] getState();
 
     /**
      * @param move The move which the player want to execute
@@ -21,7 +23,7 @@ public interface GameLogic{
 
     /**
      *
-     * @return 1 for Setting Stones, 2 for push Stones, 3 for jump with stones
+     * @return StoneAction an enum type which represents the phase of the game. The phases are SET, PUSH and JUMP.
      */
-    int getPhase();
+    StoneAction getPhase();
 }
