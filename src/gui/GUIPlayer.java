@@ -1,6 +1,6 @@
-package gui;
+package src.gui;
 
-import common.Move;
+import src.common.Move;
 
 public interface GUIPlayer {
 

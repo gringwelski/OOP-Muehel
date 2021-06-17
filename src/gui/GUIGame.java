@@ -1,6 +1,6 @@
-package gui;
+package src.gui;
 
-import player.Player;
+import src.player.Player;
 import java.util.List;
 
 public interface GUIGame {
