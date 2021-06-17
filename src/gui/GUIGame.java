@@ -22,10 +22,16 @@ public interface GUIGame {
     /**
      * creates the GUI and gives parameters to show some statistics.
      *
+     */
+    void create();
+
+    /**
+     * shows the highscores
+     *
      * @param playerNames a List of the Names of the Player who played the game
      * @param amountGames a List of the amount iof games a specific player played
      * @param wonGames a List of the amount of games aspecific player won
      */
-    void create(List<String> playerNames, List<Integer> amountGames, List<Integer> wonGames);
+    void showHighscores(List<String> playerNames, List<String> amountGames, List<String> wonGames);
 
 }
