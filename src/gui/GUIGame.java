@@ -1,5 +1,6 @@
 package src.gui;
 
+import src.common.PlayerColor;
 import src.player.Player;
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface GUIGame {
      *
      * @param field which shouldbe updated
      */
-    void synchronizeGame(String[][] field);
+    void synchronizeGame(PlayerColor[][] field);
 
     /**
      * says the UI that the the game is won by one of the two players
