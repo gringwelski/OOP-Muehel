@@ -47,7 +47,7 @@ class GUIGameTest {
     void setUp() throws TimeoutException {
         this.game = new GUIGameDummy();
         FxToolkit.setupApplication(() -> {
-            this.game.create();
+            this.game.create(null);  // CHANGE TO REAL GAME LOGIC
             return (Application) this.game;
         });
     }
