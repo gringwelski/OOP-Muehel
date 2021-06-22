@@ -1,6 +1,7 @@
 package src.gui;
 
 import src.common.PlayerColor;
+import src.game.GameLogic;
 import src.player.Player;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public interface GUIGame {
      * creates the GUI and gives parameters to show some statistics.
      *
      */
-    void create();
+    void create(GameLogic gameLogic);
 
     /**
      * shows the highscores
