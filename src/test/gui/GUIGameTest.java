@@ -1,5 +1,6 @@
 package gui;
 
+import common.Move;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
@@ -17,8 +18,7 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.matcher.control.TableViewMatchers;
 import common.PlayerColor;
-import gui.GUI;
-import gui.GUIGame;
+import player.Player;
 
 import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
@@ -80,7 +80,27 @@ class GUIGameTest {
     @Test
     void testWinDialog() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
-        Platform.runLater(() -> game.win(null));
+        Platform.runLater(() -> game.win(new Player() {
+            @Override
+            public String getName() {
+                return "gsag";
+            }
+
+            @Override
+            public PlayerColor getColor() {
+                return null;
+            }
+
+            @Override
+            public boolean isAi() {
+                return false;
+            }
+
+            @Override
+            public Move makeMove() {
+                return null;
+            }
+        }));
         Platform.runLater(latch::countDown);
         latch.await();
         Assertions.assertEquals(2, FxService.serviceContext().getWindowFinder().listWindows().size());

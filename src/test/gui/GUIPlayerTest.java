@@ -1,5 +1,6 @@
 package gui;
 
+import common.PlayerColor;
 import javafx.application.Application;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
@@ -14,8 +15,7 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.matcher.control.LabeledMatchers;
 import common.Move;
-import gui.GUI;
-import gui.GUIGame;
+import player.Player;
 
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
@@ -60,7 +60,27 @@ class GUIPlayerTest {
         AtomicReference<Move> move = null;
         Thread thread = new Thread(() -> {
             // !!!! REPLACE LATER WITH REAL PLAYER OBJECT !!!!
-            move.set(game.makeManualMove(null));
+            move.set(game.makeManualMove(new Player() {
+                @Override
+                public String getName() {
+                    return "gsard";
+                }
+
+                @Override
+                public PlayerColor getColor() {
+                    return null;
+                }
+
+                @Override
+                public boolean isAi() {
+                    return false;
+                }
+
+                @Override
+                public Move makeMove() {
+                    return null;
+                }
+            }));
         });
         thread.start();
         robot.clickOn("#point1-1", MouseButton.PRIMARY);
