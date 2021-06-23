@@ -16,8 +16,7 @@ public interface Player {
    * @return Instance of {@link Player}
    */
   static Player create(boolean ai, String name, PlayerColor color, GameLogic game, GUIPlayer gui) {
-    //TODO: Implement logic for creating a player
-    return null;
+    return ai ? new AIPlayer(name, color, game, gui) : new RealPlayer(name, color, game, gui);
   }
 
   /**
@@ -29,7 +28,7 @@ public interface Player {
 
   /**
    * Gets the color of the current player
-   * 
+   *
    * @return player color
    */
   PlayerColor getColor();

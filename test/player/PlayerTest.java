@@ -2,29 +2,33 @@ package test.player;
 
 import src.common.StoneMove;
 import src.player.Player;
-import test.player.PlayerDummyClass;
 import src.common.PlayerColor;
 import src.common.Move;
 
 public class PlayerTest {
+
+    public static void main(String[] args) {
+
+    }
+
     void testGetName(){
-        Player testPlayer = new PlayerDummyClass();
+        Player testPlayer = Player.create(false, "Test Player 1", PlayerColor.WHITE, null, null);
 
         testPlayer.getName();
         eingabeGleich(testPlayer.getName(), "player1", "player1");
     }
 
     void testGetColor(){
-        Player testPlayer = new PlayerDummyClass();
+        Player testPlayer = Player.create(false, "Test Player 1", PlayerColor.WHITE, null, null);
         eingabeGleich(testPlayer.getColor(), PlayerColor.WHITE, "GetColor");
 
     }
     void testIsAi(){
-        Player testPlayer = new PlayerDummyClass();
+        Player testPlayer = Player.create(false, "Test Player 1", PlayerColor.WHITE, null, null);
         eingabeGleich(testPlayer.isAi(), true, "isAi");
     }
     void testMakeMove(){
-        Player testPlayer = new PlayerDummyClass();
+        Player testPlayer = Player.create(false, "Test Player 1", PlayerColor.WHITE, null, null);
         Move x = new StoneMove(1,1,2,2);
         eingabeGleich(testPlayer.makeMove(), x, "MakeMove");
     }
