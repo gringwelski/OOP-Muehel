@@ -17,6 +17,7 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.matcher.control.TableViewMatchers;
 import src.common.PlayerColor;
+import src.gui.GUI;
 import src.gui.GUIGame;
 
 import java.util.Arrays;
@@ -34,7 +35,7 @@ import java.util.concurrent.TimeoutException;
 @ExtendWith(ApplicationExtension.class)
 class GUIGameTest {
 
-    private GUIGame game;
+    private GUI game;
     private final FxRobot robot = new FxRobot();
 
     /**
@@ -45,7 +46,7 @@ class GUIGameTest {
      */
     @BeforeEach
     void setUp() throws TimeoutException {
-        this.game = new GUIGameDummy();
+        this.game = new GUI();
         FxToolkit.setupApplication(() -> {
             this.game.create(null);  // CHANGE TO REAL GAME LOGIC
             return (Application) this.game;
