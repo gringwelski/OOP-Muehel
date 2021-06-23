@@ -14,6 +14,7 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.matcher.control.LabeledMatchers;
 import src.common.Move;
+import src.gui.GUI;
 import src.gui.GUIGame;
 
 import java.util.concurrent.TimeoutException;
@@ -28,7 +29,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @ExtendWith(ApplicationExtension.class)
 class GUIPlayerTest {
-    private GUIGameDummy game;
+    private GUI game;
     private final FxRobot robot = new FxRobot();
 
     /**
@@ -39,7 +40,7 @@ class GUIPlayerTest {
      */
     @BeforeEach
     void setUp() throws TimeoutException {
-        this.game = new GUIGameDummy();
+        this.game = new GUI();
         FxToolkit.setupApplication(() -> {
             this.game.create(null); // CHANGE TO REAL GAME LOGIC
             return (Application) this.game;
