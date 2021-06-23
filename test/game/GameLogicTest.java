@@ -24,7 +24,7 @@ class GameLogicTest {
 
     @Test
     void testGetState_noStones() {
-        GameLogic gameLogic = new GameLogicDummy();
+        gameLogic = new GameLogicDummy();
         PlayerColor[][] state = gameLogic.getState();
 
         for (PlayerColor[] playerColor : state) {
@@ -32,21 +32,6 @@ class GameLogicTest {
                 assertEquals(PlayerColor.NONE, playerColor1);
             }
         }
-    }
-
-
-    @Test
-    void testIsValidMove_validMove_Null() {
-        PlayerColor[][] field = new PlayerColor[7][6];
-        for (PlayerColor[] row : field) Arrays.fill(row, PlayerColor.NONE);
-
-        Move move = new MoveDummy(null, new PointDummy(1, 1));
-
-        gameLogic = new GameLogicDummy();
-        gameLogic.setField(field);
-        boolean valid = gameLogic.isValidMove(move);
-
-        assertTrue(valid);
     }
 
     @Test
@@ -57,6 +42,7 @@ class GameLogicTest {
         Move move = new MoveDummy(new PointDummy(1, 1), null);
 
         gameLogic = new GameLogicDummy();
+        gameLogic.setField(field);
         boolean valid = gameLogic.isValidMove(move);
 
         assertFalse(valid);
@@ -70,13 +56,29 @@ class GameLogicTest {
         Move move = new MoveDummy(null, null);
 
         gameLogic = new GameLogicDummy();
+        gameLogic.setField(field);
         boolean valid = gameLogic.isValidMove(move);
 
         assertFalse(valid);
     }
+    
+    @Test
+    void testIsValidMove_validMove_SET() {
+        PlayerColor[][] field = new PlayerColor[7][6];
+        for (PlayerColor[] row : field) Arrays.fill(row, PlayerColor.NONE);
+
+        Move move = new MoveDummy(null, new PointDummy(1, 1));
+
+        gameLogic = new GameLogicDummy();
+        gameLogic.setField(field);
+        gameLogic.setPhase(StoneAction.SET);
+        boolean valid = gameLogic.isValidMove(move);
+
+        assertTrue(valid);
+    }
 
     @Test
-    void testIsValidMove_invalidMove_NullStone() {
+    void testIsValidMove_invalidMove_SET() {
         PlayerColor[][] field = new PlayerColor[7][6];
         for (PlayerColor[] row : field) Arrays.fill(row, PlayerColor.NONE);
 
@@ -85,13 +87,15 @@ class GameLogicTest {
         Move move = new MoveDummy(null, new PointDummy(0, 0));
 
         gameLogic = new GameLogicDummy();
+        gameLogic.setField(field);
+        gameLogic.setPhase(StoneAction.SET);
         boolean valid = gameLogic.isValidMove(move);
 
         assertFalse(valid);
     }
 
     @Test
-    void testIsValidMove_validMove_notNull() {
+    void testIsValidMove_validMove_PUSH() {
         PlayerColor[][] field = new PlayerColor[7][6];
         for (PlayerColor[] row : field) Arrays.fill(row, PlayerColor.NONE);
 
@@ -100,26 +104,106 @@ class GameLogicTest {
         Move move = new MoveDummy(new PointDummy(1, 1), new PointDummy(2, 1));
 
         gameLogic = new GameLogicDummy();
+        gameLogic.setPhase(StoneAction.PUSH);
+        gameLogic.setPlayer(new Player(){
+            @Override
+            public String getName() {
+                return null;
+            }
+
+            @Override
+            public PlayerColor getColor() {
+                return PlayerColor.BLACK;
+            }
+
+            @Override
+            public boolean isAi() {
+                return false;
+            }
+
+            @Override
+            public Move makeMove() {
+                return null;
+            }
+        });
         boolean valid = gameLogic.isValidMove(move);
 
         assertTrue(valid);
     }
 
     @Test
-    void testIsValidMove_invalidMove_notNull() {
+    void testIsValidMove_invalidMove_PUSH_WrongColor() {
+        PlayerColor[][] field = new PlayerColor[7][6];
+        for (PlayerColor[] row : field) Arrays.fill(row, PlayerColor.NONE);
+
+        field[1][1] = PlayerColor.BLACK;
+
+        Move move = new MoveDummy(new PointDummy(1, 1), new PointDummy(2, 1));
+
+        gameLogic = new GameLogicDummy();
+        gameLogic.setField(field);
+        gameLogic.setPhase(StoneAction.PUSH);
+        gameLogic.setPlayer(new Player(){
+            @Override
+            public String getName() {
+                return null;
+            }
+
+            @Override
+            public PlayerColor getColor() {
+                return PlayerColor.WHITE;
+            }
+
+            @Override
+            public boolean isAi() {
+                return false;
+            }
+
+            @Override
+            public Move makeMove() {
+                return null;
+            }
+        });
+        boolean valid = gameLogic.isValidMove(move);
+
+        assertFalse(valid);
+    }
+
+    @Test
+    void testIsValidMove_invalidMove_PUSH_NoLine() {
         PlayerColor[][] field = new PlayerColor[7][6];
         for (PlayerColor[] row : field) Arrays.fill(row, PlayerColor.NONE);
 
         field[3][2] = PlayerColor.BLACK;
+
+        Move move = new MoveDummy(new PointDummy(3, 2), new PointDummy(3, 3));
+
+        gameLogic = new GameLogicDummy();
+        gameLogic.setPhase(StoneAction.PUSH);
+        gameLogic.setField(field);
+        boolean valid = gameLogic.isValidMove(move);
+
+        assertFalse(valid);
+    }
+
+    @Test
+    void testIsValidMove_invalidMove_PUSH_NoStone() {
+        PlayerColor[][] field = new PlayerColor[7][6];
+        for (PlayerColor[] row : field) Arrays.fill(row, PlayerColor.NONE);
+
+        field[3][2] = PlayerColor.NONE;
         field[3][1] = PlayerColor.WHITE;
 
         Move move = new MoveDummy(new PointDummy(3, 2), new PointDummy(3, 3));
 
         gameLogic = new GameLogicDummy();
+        gameLogic.setPhase(StoneAction.PUSH);
+        gameLogic.setField(field);
         boolean valid = gameLogic.isValidMove(move);
 
         assertFalse(valid);
     }
+
 
 
     @Test
