@@ -90,7 +90,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         grid = createGrid();
         fill(grid);
 
-        Image image = new Image("resources/images/board.png", 500, 500, true, true, true);
+        Image image = new Image(Objects.requireNonNull(getClass().getResource("/images/board.png")).toString(), 500, 500, true, true, true);
         ImageView imageView = new ImageView(image);
         imageView.setFitHeight(grid.getHeight());
         imageView.setStyle("-fx-background-color: #000000;");
@@ -190,11 +190,11 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
                 Point point = mapping.get(new FieldPoint(r, c));
                 Label label = (Label) getNodeByRowColumn(point.getY(), point.getX());
                 if (field[r][c] == PlayerColor.BLACK) {
-                    label.setStyle("-fx-background-image:url(\"resources/images/blackstone.png\"); -fx-background-size: cover;");
+                    label.setStyle("-fx-background-image:url('/images/blackstone.png'); -fx-background-size: cover;");
                     label.getStyleClass().clear();
                     label.getStyleClass().add("black");
                 } else if (field[r][c] == PlayerColor.WHITE) {
-                    label.setStyle("-fx-background-image:url(\"resources/images/whitestone.png\"); -fx-background-size: cover;");
+                    label.setStyle("-fx-background-image:url('/images/whitestone.png'); -fx-background-size: cover;");
                     label.getStyleClass().clear();
                     label.getStyleClass().add("white");
                 } else if (field[r][c] == PlayerColor.NONE) {
@@ -248,7 +248,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         }).start();
         synchronized (synchronize) {
             try {
-                synchronize.wait();
+                synchronize.wait(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
