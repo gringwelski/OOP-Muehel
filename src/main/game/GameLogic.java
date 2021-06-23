@@ -1,8 +1,8 @@
-package src.game;
-import src.common.Move;
-import src.common.PlayerColor;
-import src.common.Point;
-import src.common.StoneAction;
+package game;
+import common.Move;
+import common.PlayerColor;
+import common.Point;
+import common.StoneAction;
 
 public interface GameLogic{
     /**
@@ -11,7 +11,7 @@ public interface GameLogic{
     PlayerColor[][] getState();
 
     /**
-     * @param move The move which the player want to execute
+     * @param move The move which the main.player want to execute
      * @return returns whether the action is valid or not
      */
     boolean isValidMove(Move move);
@@ -23,7 +23,7 @@ public interface GameLogic{
 
     /**
      *
-     * @return StoneAction an enum type which represents the phase of the game. The phases are SET, PUSH and JUMP.
+     * @return StoneAction an enum type which represents the phase of the main.game. The phases are SET, PUSH and JUMP.
      */
     StoneAction getPhase();
 }

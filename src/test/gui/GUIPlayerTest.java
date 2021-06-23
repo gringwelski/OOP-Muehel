@@ -1,4 +1,4 @@
-package test.gui;
+package gui;
 
 import javafx.application.Application;
 import javafx.scene.input.KeyCode;
@@ -13,9 +13,9 @@ import org.testfx.api.FxRobot;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.matcher.control.LabeledMatchers;
-import src.common.Move;
-import src.gui.GUI;
-import src.gui.GUIGame;
+import common.Move;
+import gui.GUI;
+import gui.GUIGame;
 
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;

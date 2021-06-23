@@ -1,10 +1,10 @@
-package src.player;
+package player;
 
-import src.common.Move;
-import src.common.PlayerColor;
-import src.common.StoneAction;
-import src.game.GameLogic;
-import src.gui.GUIPlayer;
+import common.Move;
+import common.PlayerColor;
+import common.StoneAction;
+import game.GameLogic;
+import gui.GUIPlayer;
 
 public class RealPlayer implements Player {
 

@@ -1,9 +1,8 @@
-package test.player;
+package player;
 
-import src.common.StoneMove;
-import src.player.Player;
-import src.common.PlayerColor;
-import src.common.Move;
+import common.Move;
+import common.PlayerColor;
+import common.StoneMove;
 
 public class PlayerTest {
 

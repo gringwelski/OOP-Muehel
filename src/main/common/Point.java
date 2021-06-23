@@ -1,7 +1,7 @@
-package src.common;
+package common;
 
 /**
- * X and Y <b>do not</b> mean pixels in the image, rather they mean the specific point in the game field as
+ * X and Y <b>do not</b> mean pixels in the image, rather they mean the specific point in the main.game field as
  * illustrated below<br>
  * <br>
  * Length: 6<br>

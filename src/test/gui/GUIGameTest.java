@@ -1,4 +1,4 @@
-package test.gui;
+package gui;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -16,9 +16,9 @@ import org.testfx.api.FxService;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.matcher.control.TableViewMatchers;
-import src.common.PlayerColor;
-import src.gui.GUI;
-import src.gui.GUIGame;
+import common.PlayerColor;
+import gui.GUI;
+import gui.GUIGame;
 
 import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;

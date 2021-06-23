@@ -1,9 +1,9 @@
-package src.player;
+package player;
 
-import src.common.Move;
-import src.common.PlayerColor;
-import src.game.GameLogic;
-import src.gui.GUIPlayer;
+import common.Move;
+import common.PlayerColor;
+import game.GameLogic;
+import gui.GUIPlayer;
 
 public class AIPlayer implements Player {
 

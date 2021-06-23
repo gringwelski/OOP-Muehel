@@ -1,14 +1,14 @@
-package test.game;
+package game;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import src.common.Move;
-import src.common.PlayerColor;
-import src.common.StoneAction;
-import src.game.GameLogic;
-import src.player.Player;
-import test.common.MoveDummy;
-import test.common.PointDummy;
+import common.Move;
+import common.PlayerColor;
+import common.StoneAction;
+import game.GameLogic;
+import player.Player;
+import common.MoveDummy;
+import common.PointDummy;
 
 import java.util.Arrays;
 
@@ -61,7 +61,7 @@ class GameLogicTest {
 
         assertFalse(valid);
     }
-    
+
     @Test
     void testIsValidMove_validMove_SET() {
         PlayerColor[][] field = new PlayerColor[7][6];

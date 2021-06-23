@@ -1,4 +1,4 @@
-package src.gui;
+package gui;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -16,9 +16,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import src.common.*;
-import src.game.GameLogic;
-import src.player.Player;
+import common.*;
+import game.GameLogic;
+import player.Player;
 
 
 import java.util.*;

@@ -1,8 +1,8 @@
-package src.gui;
+package gui;
 
-import src.common.PlayerColor;
-import src.game.GameLogic;
-import src.player.Player;
+import common.PlayerColor;
+import game.GameLogic;
+import player.Player;
 import java.util.List;
 
 public interface GUIGame {
@@ -15,7 +15,7 @@ public interface GUIGame {
     void synchronizeGame(PlayerColor[][] field);
 
     /**
-     * says the UI that the the game is won by one of the two players
+     * says the UI that the the main.game is won by one of the two players
      *
      * @param player who has won
      */
@@ -30,9 +30,9 @@ public interface GUIGame {
     /**
      * shows the highscores
      *
-     * @param playerNames a List of the Names of the Player who played the game
-     * @param amountGames a List of the amount iof games a specific player played
-     * @param wonGames a List of the amount of games aspecific player won
+     * @param playerNames a List of the Names of the Player who played the main.game
+     * @param amountGames a List of the amount iof games a specific main.player played
+     * @param wonGames a List of the amount of games aspecific main.player won
      */
     void showHighscores(List<String> playerNames, List<String> amountGames, List<String> wonGames);
 
