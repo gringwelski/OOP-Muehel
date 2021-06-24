@@ -3,6 +3,7 @@ package gui;
 import common.Move;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
@@ -66,15 +67,17 @@ class GUIGameTest {
         PlayerColor[][] matrix = new PlayerColor[7][6];
         for (PlayerColor[] row : matrix)
             Arrays.fill(row, PlayerColor.NONE);
-        matrix[0][0] = PlayerColor.BLACK;
+        matrix[3][4] = PlayerColor.BLACK;
         matrix[3][2] = PlayerColor.WHITE;
         matrix[6][2] = PlayerColor.BLACK;
 
         game.synchronizeGame(matrix);
 
-        FxAssert.verifyThat("#point0-0", node -> node.getStyleClass().contains("black"));
-        FxAssert.verifyThat("#point3-2", node -> node.getStyleClass().contains("white"));
-        FxAssert.verifyThat("#point6-2", node -> node.getStyleClass().contains("black"));
+        System.out.println(robot.lookup("#point3-2").queryAs(Label.class).getStyleClass().toString());
+
+        Assertions.assertTrue(robot.lookup("#point3-4").queryAs(Label.class).getStyleClass().toString().contains("black"));
+        Assertions.assertTrue(robot.lookup("#point3-2").queryAs(Label.class).getStyleClass().toString().contains("white"));
+        Assertions.assertTrue(robot.lookup("#point6-2").queryAs(Label.class).getStyleClass().toString().contains("black"));
     }
 
     @Test
