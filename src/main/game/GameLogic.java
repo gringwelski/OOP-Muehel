@@ -17,9 +17,13 @@ public interface GameLogic{
     boolean isValidMove(Move move);
 
     /**
+     * @param namePlayer1 name of the first Player
+     * @param player1IsAi true if player1 is an AI
+     * @param namePlayer2 name of the second Player
+     * @param player2IsAi true if player2 is an AI
      * start the Game with the current settings
      */
-    void runGame();
+    void runGame(String namePlayer1, boolean player1IsAi, String namePlayer2, boolean player2IsAi);
 
     /**
      *
