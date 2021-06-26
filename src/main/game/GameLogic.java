@@ -4,7 +4,8 @@ import common.PlayerColor;
 import common.Point;
 import common.StoneAction;
 
-public interface GameLogic{
+public interface
+GameLogic{
     /**
      * @return a 2 dimensional array in shape of the playfield
      */
@@ -30,4 +31,11 @@ public interface GameLogic{
      * @return StoneAction an enum type which represents the phase of the main.game. The phases are SET, PUSH and JUMP.
      */
     StoneAction getPhase();
+
+    /**
+     *
+     * @param point the point of the Stone you want to throw away
+     * @return return true if you can throw the stone
+     */
+    boolean isThrowStoneValid(Point point);
 }
