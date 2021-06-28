@@ -64,9 +64,9 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         MenuBar menu = createMenu();
 
         message.setText("Druecke auf Spiel und dann auf Start, um zu spielen.");
-        message.setPadding(new Insets(GUIValues.PADDING, GUIValues.PADDING, GUIValues.PADDING, GUIValues.PADDING));
+        message.setPadding(new Insets(0, GUIValues.PADDING, GUIValues.PADDING, GUIValues.PADDING));
         alert.setText("");
-        alert.setPadding(new Insets(0, GUIValues.PADDING, GUIValues.PADDING, GUIValues.PADDING));
+        alert.setPadding(new Insets(GUIValues.PADDING, GUIValues.PADDING, GUIValues.PADDING, GUIValues.PADDING));
 
         VBox vbox = new VBox();
         vbox.getChildren().addAll(menu, alert, message);
@@ -374,8 +374,9 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
                     label.setId("point" + point.getX() + "-" + point.getY());
                 } catch (NullPointerException e) {
                     label.setId("gridpoint");
-                    label.setDisable(true);
                 }
+
+                label.setDisable(true);
 
                 Point point = getKeyOfMapping(new FieldPoint(r, c));
 
