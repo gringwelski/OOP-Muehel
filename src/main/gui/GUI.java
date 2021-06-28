@@ -37,7 +37,6 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
     private static boolean singleClick;
     private static final Object synchronize = new Object();
     private static ConcurrentHashMap<Point, Point> mapping;
-    private static CountDownLatch latch;
     private static String player1Name = "Spieler 1";
     private static String player2Name = "Spieler 2";
     private static boolean player1AI = false;
@@ -418,7 +417,10 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         });
 
         menuItemNewGame.setOnAction(event -> {
-            gameLogic.runGame(player1Name, player1AI, player2Name, player2AI);
+            new Thread(() -> {
+                gameLogic.runGame(player1Name, player1AI, player2Name, player2AI);
+            }).start();
+
         });
 
 
