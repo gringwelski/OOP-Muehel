@@ -295,6 +295,8 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         firstClick = true;
         singleClick = false;
 
+        disableFields(player);
+
         waitForAction(player, msg);
         return move;
     }
@@ -303,8 +305,34 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
     public Move setStone(Player player, String msg) {
         singleClick = true;
 
+        disableFields(player);
+
         waitForAction(player, msg);
         return move;
+    }
+
+    private void disableFields(Player player) {
+        ObservableList<Node> labels = grid.getChildren();
+
+        String disable = "";
+        String enable = "";
+
+        PlayerColor color = player.getColor();
+        if (color == PlayerColor.BLACK) {
+            disable = "white";
+            enable = "black";
+        } else if (color == PlayerColor.WHITE) {
+            disable = "black";
+            enable = "white";
+        }
+
+        for (Node label : labels) {
+            if (label.getStyleClass().contains(disable)) {
+                label.setDisable(true);
+            } else if (label.getStyleClass().contains(enable)) {
+                label.setDisable(false);
+            }
+        }
     }
 
     private void waitForAction(Player player, String msg) {
@@ -372,8 +400,9 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
                     label.setId("point" + point.getX() + "-" + point.getY());
                 } catch (NullPointerException e) {
                     label.setId("gridpoint");
-                    label.setDisable(true);
                 }
+
+                label.setDisable(true);
 
                 Point point = getKeyOfMapping(new FieldPoint(r, c));
 
@@ -593,5 +622,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         }
 
     }
+
+
 
 }
