@@ -40,9 +40,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
     private static String player1Name = "Spieler 1";
     private static String player2Name = "Spieler 2";
     private static boolean player1AI = false;
-    private static boolean player2AI = true;
-
-
+    private static boolean player2AI = false;
 
     @Override
     public void start(Stage stage) {
@@ -374,9 +372,8 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
                     label.setId("point" + point.getX() + "-" + point.getY());
                 } catch (NullPointerException e) {
                     label.setId("gridpoint");
+                    label.setDisable(true);
                 }
-
-                label.setDisable(true);
 
                 Point point = getKeyOfMapping(new FieldPoint(r, c));
 
@@ -456,9 +453,9 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
 
             // second column -> textFields for names
             TextField textFieldPlayer1 = new TextField();
-            textFieldPlayer1.setPromptText("Spieler 1");
+            textFieldPlayer1.setPromptText(player1Name);
             TextField textFieldPlayer2 = new TextField();
-            textFieldPlayer2.setPromptText("Spieler 2");
+            textFieldPlayer2.setPromptText(player2Name);
 
             grid.add(textFieldPlayer1, 1, 1);
             grid.add(textFieldPlayer2, 1, 2);
@@ -466,7 +463,8 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
             // third column -> chckbox to select implementation
             CheckBox firstPlayerAI = new CheckBox();
             CheckBox secondPlayerAI = new CheckBox();
-            secondPlayerAI.setSelected(true);
+            firstPlayerAI.setSelected(player1AI);
+            secondPlayerAI.setSelected(player2AI);
 
             grid.add(firstPlayerAI, 2, 1);
             grid.add(secondPlayerAI, 2, 2);
