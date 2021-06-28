@@ -1,7 +1,7 @@
 package common;
 
 public enum PlayerColor {
-  WHITE("schwarz"), BLACK("weiß"), NONE("keine");
+  WHITE("weiß"), BLACK("schwarz"), NONE("keine");
 
   private final String color;
 
