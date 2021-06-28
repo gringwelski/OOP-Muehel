@@ -33,7 +33,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
     private static Label alert;
     private static GameLogic gameLogic;
     private static Move move;
-    private static boolean firstClick = false;
+    private static boolean firstClick;
     private static boolean singleClick;
     private static final Object synchronize = new Object();
     private static ConcurrentHashMap<Point, Point> mapping;
@@ -96,8 +96,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         matrix[0][0] = PlayerColor.BLACK;
         matrix[3][2] = PlayerColor.WHITE;
         matrix[6][2] = PlayerColor.BLACK;
-
-//        synchronizeGame(matrix);
+        synchronizeGame(matrix);
 
 //        makeManualMove(new Player() {
 //            @Override
@@ -200,8 +199,6 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
     public void synchronizeGame(PlayerColor[][] field) {
         highscorePane.setVisible(false);
 
-        latch = new CountDownLatch(24);
-
         for(int x = 0; x < 7; x++) {
             for(int y = 0; y < 6; y++) {
                 Point point = mapping.get(new FieldPoint(x, y));
@@ -218,33 +215,22 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
                             label.setStyle("-fx-background-image:url('/images/blackstone.png'); -fx-background-size: cover;");
                             label.getStyleClass().clear();
                             label.getStyleClass().add("black");
-                            latch.countDown();
-                            System.out.println("B");
                         });
                     } else if (field[x][y] == PlayerColor.WHITE) {
                         Platform.runLater(() -> {
                             label.setStyle("-fx-background-image:url('/images/whitestone.png'); -fx-background-size: cover;");
                             label.getStyleClass().clear();
                             label.getStyleClass().add("white");
-                            latch.countDown();
-                            System.out.println("W");
                         });
                     } else if (field[x][y] == PlayerColor.NONE) {
                         Platform.runLater(() -> {
                             label.setStyle("-fx-background-image: none;" + GUIValues.INVISIBLE_BACKGROUND);
                             label.getStyleClass().clear();
-                            latch.countDown();
-                            System.out.println("N");
                         });
                     }
                 }
             }
         }
-//        try {
-//            latch.await();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
     }
 
     private Node getNodeByRowColumn(int row, int column) {
@@ -356,7 +342,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
 
     @Override
     public Move setStone(Player player, String msg) {
-        singleClick = false;
+        singleClick = true;
 
         waitForAction(player, msg);
         return move;
@@ -427,6 +413,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
                     label.setId("point" + point.getX() + "-" + point.getY());
                 } catch (NullPointerException e) {
                     label.setId("gridpoint");
+                    label.setDisable(true);
                 }
 
                 Point point = getKeyOfMapping(new FieldPoint(r, c));
