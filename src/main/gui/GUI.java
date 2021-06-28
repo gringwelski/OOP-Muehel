@@ -10,32 +10,53 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import common.*;
 import game.GameLogic;
+import javafx.util.Pair;
 import player.Player;
 
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 
 public class GUI extends Application implements GUIGame, GUIPlayer {
     private static GridPane grid;
     private static BorderPane highscorePane;
-    private static Label message = new Label();
-    private static Label alert = new Label();
-    private GameLogic gameLogic;
-    private Move move;
-    private boolean firstClickDone = false;
+    private static Label message;
+    private static Label alert;
+    private static GameLogic gameLogic;
+    private static Move move;
+    private static boolean firstClick = false;
+    private static boolean singleClick;
     private static final Object synchronize = new Object();
-    private static ConcurrentHashMap<Point, Point> mapping = new ConcurrentHashMap<Point, Point>();
+    private static ConcurrentHashMap<Point, Point> mapping;
+    private static CountDownLatch latch;
+    private static String player1Name = "Spieler 1";
+    private static String player2Name = "Spieler 2";
+    private static boolean player1AI = false;
+    private static boolean player2AI = true;
+
+    public static void main(String[] args) {
+        GUI gui = new GUI();
+
+        gui.create(null);
+
+    }
 
     @Override
     public void start(Stage stage) {
+        mapping = new ConcurrentHashMap<Point, Point>();
         createMapping();
+
+        message = new Label();
+        alert = new Label();
 
         grid = createGrid();
         fill(grid);
@@ -46,12 +67,12 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         highscorePane = createHighscorePane();
         highscorePane.setVisible(false);
 
-        MenuBar menu = createMenu(stage);
+        MenuBar menu = createMenu();
 
         message.setText("Druecke auf Spiel und dann auf Start, um zu spielen.");
-        message.setPadding(new Insets(10, 10, 10, 10));
+        message.setPadding(new Insets(GUIValues.PADDING, GUIValues.PADDING, GUIValues.PADDING, GUIValues.PADDING));
         alert.setText("");
-        alert.setPadding(new Insets(0, 10, 10, 10));
+        alert.setPadding(new Insets(0, GUIValues.PADDING, GUIValues.PADDING, GUIValues.PADDING));
 
         VBox vbox = new VBox();
         vbox.getChildren().addAll(menu, alert, message);
@@ -70,6 +91,40 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
             synchronize.notifyAll();
         }
 
+        PlayerColor[][] matrix = new PlayerColor[7][6];
+        for (PlayerColor[] row : matrix) Arrays.fill(row, PlayerColor.NONE);
+        matrix[0][0] = PlayerColor.BLACK;
+        matrix[3][2] = PlayerColor.WHITE;
+        matrix[6][2] = PlayerColor.BLACK;
+
+//        synchronizeGame(matrix);
+
+//        makeManualMove(new Player() {
+//            @Override
+//            public String getName() {
+//                return "sdjgsdjs";
+//            }
+//
+//            @Override
+//            public PlayerColor getColor() {
+//                return null;
+//            }
+//
+//            @Override
+//            public boolean isAi() {
+//                return false;
+//            }
+//
+//            @Override
+//            public Move makeMove() {
+//                return null;
+//            }
+//
+//            @Override
+//            public Point selectThrowStone() {
+//                return null;
+//            }
+//        });
     }
 
     private void createMapping() {
@@ -114,7 +169,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
 
         Label label = new Label();
         label.setText("Highscores");
-        label.setPadding(new Insets(25, 10, 10, 10));
+        label.setPadding(new Insets(GUIValues.PADDING, GUIValues.PADDING, GUIValues.PADDING, GUIValues.PADDING));
         label.setStyle("-fx-font-weight: bold; -fx-font-size: 24;");
 
         Button restartButton = new Button();
@@ -131,19 +186,22 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         HBox.setHgrow(region2, Priority.SOMETIMES);
 
         hBox.getChildren().addAll(region1, restartButton, region2, exitButton);
-        hBox.setPadding(new Insets(10, 10, 10, 10));
+        hBox.setPadding(new Insets(GUIValues.PADDING, GUIValues.PADDING, GUIValues.PADDING, GUIValues.PADDING));
 
         highscorePane.setTop(label);
         highscorePane.setBottom(hBox);
 
-        highscorePane.setStyle("-fx-background-color: rgb(255, 255, 255, 0.7);");
+        highscorePane.setStyle(GUIValues.HIGHSCORE_BACKGROUND);
 
         return highscorePane;
     }
 
-
     @Override
-    public synchronized void  synchronizeGame(PlayerColor[][] field) {
+    public void synchronizeGame(PlayerColor[][] field) {
+        highscorePane.setVisible(false);
+
+        latch = new CountDownLatch(24);
+
         for(int x = 0; x < 7; x++) {
             for(int y = 0; y < 6; y++) {
                 Point point = mapping.get(new FieldPoint(x, y));
@@ -160,22 +218,33 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
                             label.setStyle("-fx-background-image:url('/images/blackstone.png'); -fx-background-size: cover;");
                             label.getStyleClass().clear();
                             label.getStyleClass().add("black");
+                            latch.countDown();
+                            System.out.println("B");
                         });
                     } else if (field[x][y] == PlayerColor.WHITE) {
                         Platform.runLater(() -> {
                             label.setStyle("-fx-background-image:url('/images/whitestone.png'); -fx-background-size: cover;");
                             label.getStyleClass().clear();
                             label.getStyleClass().add("white");
+                            latch.countDown();
+                            System.out.println("W");
                         });
                     } else if (field[x][y] == PlayerColor.NONE) {
                         Platform.runLater(() -> {
-                            label.setStyle("-fx-background-image: none; -fx-background-color: rgba(100, 100, 100, 0.2);");
+                            label.setStyle("-fx-background-image: none;" + GUIValues.INVISIBLE_BACKGROUND);
                             label.getStyleClass().clear();
+                            latch.countDown();
+                            System.out.println("N");
                         });
                     }
                 }
             }
         }
+//        try {
+//            latch.await();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private Node getNodeByRowColumn(int row, int column) {
@@ -203,7 +272,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent()) {
             if (result.get() == buttonTypeNewGame) {
-                gameLogic.runGame();
+                gameLogic.runGame(player1Name, player1AI, player2Name, player2AI);
             } else {
                 System.exit(0);
             }
@@ -220,7 +289,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         }).start();
         synchronized (synchronize) {
             try {
-                synchronize.wait(3000);
+                synchronize.wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -242,13 +311,13 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         convertHighscoreLists(playerNames, amountGames, wonGames, first, second, third, fourth, fifth);
 
         TableColumn<List<String>, String> playerColumn = new TableColumn("Spieler");
-        playerColumn.setMinWidth(150);
+        playerColumn.setMinWidth(GUIValues.COLUMN_MIN_WIDTH);
         playerColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().get(0)));
         TableColumn<List<String>, String> playedGamesColumn = new TableColumn("gespielt");
-        playedGamesColumn.setMinWidth(150);
+        playedGamesColumn.setMinWidth(GUIValues.COLUMN_MIN_WIDTH);
         playedGamesColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().get(1)));
         TableColumn<List<String>, String> wonGamesColumn = new TableColumn("gewonnen");
-        wonGamesColumn.setMinWidth(150);
+        wonGamesColumn.setMinWidth(GUIValues.COLUMN_MIN_WIDTH);
         wonGamesColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().get(2)));
 
         tableView.getColumns().addAll(playerColumn, playedGamesColumn, wonGamesColumn);
@@ -273,31 +342,27 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
 
     @Override
     public Move setStone(Player player) {
-        return makeManualMove(player, "");
+        return setStone(player, "");
     }
 
     @Override
     public Move makeManualMove(Player player, String msg) {
-        firstClickDone = false;
-        Platform.runLater(() -> {
-            message.setText(msg);
-            alert.setText(player.getName() + " ist am Zug.");
-        });
+        firstClick = true;
+        singleClick = false;
 
-        synchronized (synchronize) {
-            try {
-                synchronize.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
+        waitForAction(player, msg);
         return move;
     }
 
     @Override
     public Move setStone(Player player, String msg) {
-        firstClickDone = true;
+        singleClick = false;
+
+        waitForAction(player, msg);
+        return move;
+    }
+
+    private void waitForAction(Player player, String msg) {
         Platform.runLater(() -> {
             message.setText(msg);
             alert.setText(player.getName() + " ist am Zug.");
@@ -310,61 +375,71 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
                 e.printStackTrace();
             }
         }
-
-        return move;
     }
-
 
     private GridPane createGrid() {
         GridPane gridPane = new GridPane();
-        gridPane.setHgap(25);
-        gridPane.setVgap(25);
+        gridPane.setHgap(20);
+        gridPane.setVgap(20);
+        gridPane.setAlignment(Pos.CENTER);
 
         RowConstraints rowConstraints = new RowConstraints();
+        ColumnConstraints columnConstraints = new ColumnConstraints();
+
         for (int r = 0; r < 7; r++) {
             rowConstraints.setVgrow(Priority.ALWAYS);
-            rowConstraints.setFillHeight(true);
+            rowConstraints.setFillHeight(false);
+            rowConstraints.setPercentHeight(100/7);
             gridPane.getRowConstraints().add(rowConstraints);
         }
-
-        ColumnConstraints columnConstraints = new ColumnConstraints();
         for (int c = 0; c < 7; c++) {
             columnConstraints.setHgrow(Priority.ALWAYS);
-            columnConstraints.setFillWidth(true);
+            columnConstraints.setFillWidth(false);
+            columnConstraints.setPercentWidth(100/7);
             gridPane.getColumnConstraints().add(columnConstraints);
         }
+
+        Image image = new Image(getClass().getResourceAsStream("/images/board.png"));
+        ImageView imageView = new ImageView(image);
+        imageView.setPreserveRatio(true);
+        imageView.setFitHeight(Double.MAX_VALUE);
+        gridPane.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+                new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, true, false))));
+
+        gridPane.prefWidthProperty().bind(imageView.fitWidthProperty());
+//        gridPane.prefHeightProperty().bind(imageView.fitHeightProperty());
 
         return gridPane;
     }
 
     private void fill(GridPane grid) {
-        grid.setStyle("-fx-background-color: rgba(100, 100, 100, 0.0); -fx-background-image:url('/images/board.png'); -fx-background-size: cover;");
-
         for (int r = 0; r < 7; r++) {
             for (int c = 0; c < 7; c++) {
                 Label label = new Label();
                 label.setAlignment(Pos.CENTER);
                 label.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                label.setMinSize(75, 75);
+                label.setMinSize(70, 70);
                 label.setFont(new Font(18));
+
                 try {
-                    Point point = getKeyOfMapping(new FieldPoint(c, r));
+                    Point point = getKeyOfMapping(new FieldPoint(r, c));
                     label.setId("point" + point.getX() + "-" + point.getY());
                 } catch (NullPointerException e) {
                     label.setId("gridpoint");
                 }
 
-
                 Point point = getKeyOfMapping(new FieldPoint(r, c));
 
-
-                label.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        synchronized (synchronize) {
-                            if (!firstClickDone) {
+                label.setOnMouseClicked(event -> {
+                    synchronized (synchronize) {
+                        if (singleClick) {
+                            move = new StoneMove(null, point);
+                            synchronize.notifyAll();
+                        } else {
+                            if (firstClick) {
                                 move = new StoneMove(point, new FieldPoint(-1, -1));
-                                firstClickDone = true;
+                                firstClick = false;
                             } else {
                                 move = new StoneMove(move.getStartPoint(), point);
                                 synchronize.notifyAll();
@@ -373,27 +448,118 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
                     }
                 });
 
-
                 grid.add(label, c, r);
-
-                label.setStyle("-fx-background-color: rgba(100, 100, 100, 0.5);");
+                label.setStyle(GUIValues.INVISIBLE_BACKGROUND);
             }
         }
+
     }
 
-    private MenuBar createMenu(Stage stage) {
+    private MenuBar createMenu() {
         MenuBar menuBar = new MenuBar();
 
         Menu menuGame = new Menu("Spiel");
         MenuItem menuItemNewGame = new MenuItem("Start");
         MenuItem menuItemExit = new MenuItem("Beenden");
-        menuGame.getItems().addAll(menuItemNewGame, menuItemExit);
+        MenuItem menuItemSettings = new MenuItem("Einstellungen");
+        menuGame.getItems().addAll(menuItemNewGame, menuItemSettings, menuItemExit);
 
-        Menu menuSettings = new Menu("Einstellungen");
-        MenuItem menuItemPlayer = new MenuItem("Spielernamen");
-        menuSettings.getItems().add(menuItemPlayer);
+        menuItemExit.setOnAction(event -> {
+            System.exit(0);
+        });
 
-        menuBar.getMenus().addAll(menuGame, menuSettings);
+        menuItemNewGame.setOnAction(event -> {
+            gameLogic.runGame(player1Name, player1AI, player2Name, player2AI);
+        });
+
+
+        menuItemSettings.setOnAction(event -> {
+            Dialog<Pair<List<String>, List<Boolean>>> dialog = new Dialog<>();
+            dialog.setTitle("Einstellungen bearbeiten");
+            Label label = new Label("Bitte Spielernamen eingeben. \n" +
+                    "Der erste Spieler spielt mit den schwarzen Steinen. Der zweite mit den schwarzen.\n" +
+                    "Ungültige Werte werden durch vorher eingestellte Werte oder Standardwerte eingesetzt.");
+            label.setWrapText(true);
+
+            ButtonType startButtonType = new ButtonType("Einstellungen speichern", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(startButtonType, ButtonType.CANCEL);
+
+            GridPane grid = new GridPane();
+            grid.setHgap(GUIValues.PADDING);
+            grid.setVgap(GUIValues.PADDING);
+            grid.setPadding(new Insets(GUIValues.PADDING, GUIValues.PADDING, GUIValues.PADDING, GUIValues.PADDING));
+
+            // first line
+            grid.add(new Label("Farbe"), 0, 0);
+            grid.add(new Label("Spielernamen"), 1, 0);
+            grid.add(new Label("Computer"), 2, 0);
+
+            // first column -> to show colors
+            Label black = new Label("\t");
+            black.setStyle(GUIValues.BLACK);
+            Label white = new Label("\t");
+            white.setStyle(GUIValues.WHITE);
+            grid.add(white, 0, 1);
+            grid.add(black, 0, 2);
+
+            // second column -> textFields for names
+            TextField textFieldPlayer1 = new TextField();
+            textFieldPlayer1.setPromptText("Spieler 1");
+            TextField textFieldPlayer2 = new TextField();
+            textFieldPlayer2.setPromptText("Spieler 2");
+
+            grid.add(textFieldPlayer1, 1, 1);
+            grid.add(textFieldPlayer2, 1, 2);
+
+            // third column -> chckbox to select implementation
+            CheckBox firstPlayerAI = new CheckBox();
+            CheckBox secondPlayerAI = new CheckBox();
+            secondPlayerAI.setSelected(true);
+
+            grid.add(firstPlayerAI, 2, 1);
+            grid.add(secondPlayerAI, 2, 2);
+
+
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == startButtonType) {
+                    List<String> strings = new ArrayList();
+                    strings.add(textFieldPlayer1.getText());
+                    strings.add(textFieldPlayer2.getText());
+
+                    List<Boolean> bools = new ArrayList();
+                    bools.add(firstPlayerAI.isSelected());
+                    bools.add(secondPlayerAI.isSelected());
+
+                    return new Pair<>(strings, bools);
+                }
+                return null;
+            });
+
+            VBox vBox = new VBox();
+            vBox.getChildren().addAll(label, grid);
+            vBox.setPadding(new Insets(GUIValues.PADDING, GUIValues.PADDING,0, GUIValues.PADDING));
+
+            dialog.getDialogPane().setContent(vBox);
+
+            Optional<Pair<List<String>, List<Boolean>>> result = dialog.showAndWait();
+
+            result.ifPresent(results -> {
+                if (!results.getKey().get(0).trim().isEmpty()) {
+                    player1Name = results.getKey().get(0);
+                }
+                if (!results.getKey().get(1).trim().isEmpty()) {
+                    player2Name = results.getKey().get(1);
+                }
+                player1AI = results.getValue().get(0);
+                player2AI = results.getValue().get(1);
+
+            });
+
+
+        });
+
+
+        menuBar.getMenus().addAll(menuGame);
         return menuBar;
     }
 
