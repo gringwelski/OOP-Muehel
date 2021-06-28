@@ -291,11 +291,16 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
     }
 
     @Override
+    public Move takeStone(Player player) {
+        return takeStone(player, "");
+    }
+
+    @Override
     public Move makeManualMove(Player player, String msg) {
         firstClick = true;
         singleClick = false;
 
-        disableFields(player);
+        disableFields(player, true);
 
         waitForAction(player, msg);
         return move;
@@ -305,13 +310,23 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
     public Move setStone(Player player, String msg) {
         singleClick = true;
 
-        disableFields(player);
+        disableFields(player, true);
 
         waitForAction(player, msg);
         return move;
     }
 
-    private void disableFields(Player player) {
+    @Override
+    public Move takeStone(Player player, String msg) {
+        singleClick = true;
+
+        disableFields(player, false);
+
+        waitForAction(player, msg);
+        return move;
+    }
+
+    private void disableFields(Player player, boolean oppositeDisabled) {
         ObservableList<Node> labels = grid.getChildren();
 
         String disable = "";
@@ -328,9 +343,9 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
 
         for (Node label : labels) {
             if (label.getStyleClass().contains(disable)) {
-                label.setDisable(true);
+                label.setDisable(oppositeDisabled);
             } else if (label.getStyleClass().contains(enable)) {
-                label.setDisable(false);
+                label.setDisable(!oppositeDisabled);
             } else if (!label.getId().equals("gridpoint")) {
                 label.setDisable(false);
             }
