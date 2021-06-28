@@ -2,6 +2,7 @@ package gui;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -14,6 +15,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import common.*;
@@ -42,6 +44,8 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
     private static boolean player1AI = false;
     private static boolean player2AI = false;
 
+    private static StackPane stackPane;
+
     @Override
     public void start(Stage stage) {
         mapping = new ConcurrentHashMap<Point, Point>();
@@ -50,8 +54,12 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         message = new Label();
         alert = new Label();
 
+        stackPane = new StackPane();
         grid = createGrid();
         fill(grid);
+
+        stackPane.getChildren().add(grid);
+        stackPane.setPrefSize(7 * 70, 7 * 70);
 
         alert.setId("alert");
         message.setId("message");
@@ -61,16 +69,25 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
 
         MenuBar menu = createMenu();
 
-        message.setText("Druecke auf Spiel und dann auf Start, um zu spielen.");
+        message.setText("");
         message.setPadding(new Insets(0, GUIValues.PADDING, GUIValues.PADDING, GUIValues.PADDING));
-        alert.setText("");
+        alert.setText("Druecke auf Spiel und dann auf Start, um zu spielen.");
         alert.setPadding(new Insets(GUIValues.PADDING, GUIValues.PADDING, GUIValues.PADDING, GUIValues.PADDING));
 
+        Pane line = new Pane();
+        line.setPrefHeight(3);
+        line.setPrefWidth(message.getWidth());
+        line.setStyle(GUIValues.BLACK);
+
+        Pane gap = new Pane();
+        gap.setPrefHeight(5);
+        gap.setPrefWidth(message.getWidth());
+
         VBox vbox = new VBox();
-        vbox.getChildren().addAll(menu, alert, message);
+        vbox.getChildren().addAll(menu, alert, message, line, gap);
 
         BorderPane root = new BorderPane();
-        root.setCenter(grid);
+        root.setCenter(stackPane);
         root.setTop(vbox);
 
         Scene scene = new Scene(root);
@@ -171,13 +188,13 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
                     Label label = (Label) node;
                     if (field[x][y] == PlayerColor.BLACK) {
                         Platform.runLater(() -> {
-                            label.setStyle("-fx-background-image:url('/images/blackstone.png'); -fx-background-size: cover;");
+                            label.setStyle("-fx-background-image:url('/images/blackstone.png'); -fx-background-size: cover; -fx-background-position: center;");
                             label.getStyleClass().clear();
                             label.getStyleClass().add("black");
                         });
                     } else if (field[x][y] == PlayerColor.WHITE) {
                         Platform.runLater(() -> {
-                            label.setStyle("-fx-background-image:url('/images/whitestone.png'); -fx-background-size: cover;");
+                            label.setStyle("-fx-background-image:url('/images/whitestone.png'); -fx-background-size: cover; -fx-background-position: center;");
                             label.getStyleClass().clear();
                             label.getStyleClass().add("white");
                         });
@@ -369,25 +386,9 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
 
     private GridPane createGrid() {
         GridPane gridPane = new GridPane();
-        gridPane.setHgap(20);
-        gridPane.setVgap(20);
+        gridPane.setHgap(GUIValues.GRID_CELL_GAP);
+        gridPane.setVgap(GUIValues.GRID_CELL_GAP);
         gridPane.setAlignment(Pos.CENTER);
-
-        RowConstraints rowConstraints = new RowConstraints();
-        ColumnConstraints columnConstraints = new ColumnConstraints();
-
-        for (int r = 0; r < 7; r++) {
-            rowConstraints.setVgrow(Priority.ALWAYS);
-            rowConstraints.setFillHeight(false);
-            rowConstraints.setPercentHeight(100/7);
-            gridPane.getRowConstraints().add(rowConstraints);
-        }
-        for (int c = 0; c < 7; c++) {
-            columnConstraints.setHgrow(Priority.ALWAYS);
-            columnConstraints.setFillWidth(false);
-            columnConstraints.setPercentWidth(100/7);
-            gridPane.getColumnConstraints().add(columnConstraints);
-        }
 
         Image image = new Image(getClass().getResourceAsStream("/images/board.png"));
         ImageView imageView = new ImageView(image);
@@ -396,9 +397,6 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         gridPane.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
                 new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, true, false))));
-
-        gridPane.prefWidthProperty().bind(imageView.fitWidthProperty());
-//        gridPane.prefHeightProperty().bind(imageView.fitHeightProperty());
 
         return gridPane;
     }
@@ -411,6 +409,8 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
                 label.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                 label.setMinSize(70, 70);
                 label.setFont(new Font(18));
+                label.prefWidthProperty().bind(Bindings.min(stackPane.widthProperty().divide(7), stackPane.heightProperty().divide(7)));
+                label.prefHeightProperty().bind(Bindings.min(stackPane.widthProperty().divide(7), stackPane.heightProperty().divide(7)));
 
                 try {
                     Point point = getKeyOfMapping(new FieldPoint(r, c));
