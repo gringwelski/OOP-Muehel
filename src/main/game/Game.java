@@ -5,17 +5,22 @@ import common.PlayerColor;
 import common.Point;
 import common.StoneAction;
 import gui.GUI;
-import gui.GUIGame;
 import player.Player;
 
 
 public class Game implements GameLogic {
-    PlayerColor[][] field = new PlayerColor[7][6];
-    StoneAction phase = StoneAction.SET;
-    PlayerColor currentPlayColor;
-    int remainingStonesP1;
-    int remainingStonesP2;
-    boolean isLoosed;
+    private PlayerColor[][] field = new PlayerColor[7][6];
+    private StoneAction phase = StoneAction.SET;
+    private PlayerColor currentPlayColor;
+    private int remainingStonesP1;
+    private int remainingStonesP2;
+    private boolean isLoosed;
+    private GUI gui;
+
+    Game(){
+        gui = new GUI();
+        gui.create(this);
+    }
 
 
     public PlayerColor[][] getState() {
@@ -150,7 +155,7 @@ public class Game implements GameLogic {
                 field[x][y] = PlayerColor.NONE;
             }
         }
-        GUI gui = new GUI();
+        gui.synchronizeGame(field);
         isLoosed = false;
         Player player1 = Player.create(player1IsAi, namePlayer1, PlayerColor.WHITE, this, gui);
         Player player2 = Player.create(player2IsAi, namePlayer2, PlayerColor.BLACK, this, gui);
@@ -278,8 +283,7 @@ public class Game implements GameLogic {
     }
 
     public static void main(String[] args) {
-        GUIGame gui = new GUI();
-        gui.create(new Game());
+        new Game();
     }
 
     /**
