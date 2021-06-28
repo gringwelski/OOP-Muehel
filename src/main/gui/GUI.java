@@ -43,12 +43,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
     private static boolean player1AI = false;
     private static boolean player2AI = true;
 
-    public static void main(String[] args) {
-        GUI gui = new GUI();
 
-        gui.create(null);
-
-    }
 
     @Override
     public void start(Stage stage) {
@@ -91,39 +86,6 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
             synchronize.notifyAll();
         }
 
-        PlayerColor[][] matrix = new PlayerColor[7][6];
-        for (PlayerColor[] row : matrix) Arrays.fill(row, PlayerColor.NONE);
-        matrix[0][0] = PlayerColor.BLACK;
-        matrix[3][2] = PlayerColor.WHITE;
-        matrix[6][2] = PlayerColor.BLACK;
-        synchronizeGame(matrix);
-
-//        makeManualMove(new Player() {
-//            @Override
-//            public String getName() {
-//                return "sdjgsdjs";
-//            }
-//
-//            @Override
-//            public PlayerColor getColor() {
-//                return null;
-//            }
-//
-//            @Override
-//            public boolean isAi() {
-//                return false;
-//            }
-//
-//            @Override
-//            public Move makeMove() {
-//                return null;
-//            }
-//
-//            @Override
-//            public Point selectThrowStone() {
-//                return null;
-//            }
-//        });
     }
 
     private void createMapping() {
