@@ -10,7 +10,7 @@ import player.Player;
 
 
 public class Game implements GameLogic {
-    PlayerColor[][] field = new PlayerColor[6][5];
+    PlayerColor[][] field = new PlayerColor[7][6];
     StoneAction phase = StoneAction.SET;
     PlayerColor currentPlayColor;
     int remainingStonesP1;
@@ -275,7 +275,7 @@ public class Game implements GameLogic {
 
     public static void main(String[] args) {
         GUIGame gui = new GUI();
-
+        gui.create(new Game());
     }
 
     /**
