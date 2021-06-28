@@ -2,6 +2,7 @@ package player;
 
 import common.Move;
 import common.PlayerColor;
+import common.Point;
 import game.GameLogic;
 import gui.GUIPlayer;
 
@@ -10,7 +11,7 @@ public class AIPlayer implements Player {
     private final String name;
     private final PlayerColor color;
     private final GameLogic gameLogic;
-    private final  GUIPlayer gui;
+    private final GUIPlayer gui;
 
     protected AIPlayer(String name, PlayerColor color, GameLogic gameLogic, GUIPlayer gui) {
         this.name = name;
@@ -21,6 +22,11 @@ public class AIPlayer implements Player {
 
     @Override
     public Move makeMove() {
+        return null;
+    }
+
+    @Override
+    public Point selectThrowStone() {
         return null;
     }
 

@@ -2,6 +2,7 @@ package player;
 
 import common.Move;
 import common.PlayerColor;
+import common.Point;
 import common.StoneAction;
 import game.GameLogic;
 import gui.GUIPlayer;
@@ -37,6 +38,11 @@ public class RealPlayer implements Player {
     @Override
     public Move makeMove() {
         return internalMove(null);
+    }
+
+    @Override
+    public Point selectThrowStone() {
+        return null;
     }
 
     @Override

@@ -2,6 +2,7 @@ package player;
 
 import common.Move;
 import common.PlayerColor;
+import common.Point;
 import game.GameLogic;
 import gui.GUIPlayer;
 
@@ -49,4 +50,11 @@ public interface Player {
    * @return the validated {@link Move}
    */
   Move makeMove();
+
+  /**
+   * Select a stone that should be thrown out of the field
+   *
+   * @return Point of the stone that should be thrown
+   */
+  Point selectThrowStone();
 }
