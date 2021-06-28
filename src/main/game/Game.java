@@ -28,9 +28,9 @@ public class Game implements GameLogic {
     }
 
     public boolean isValidMove(Move mv) {
-        if ((phase != StoneAction.SET && mv.getStartPoint() == null) || mv.getEndPoint() == null ){
-           return false;
-        }
+        //if ((phase != StoneAction.SET && mv.getStartPoint() == null) || mv.getEndPoint() == null ){
+        //   return false;
+       // }
         // --------------------------------------------- for Phase Set ---------------------------------
         if (phase == StoneAction.SET) {
 
@@ -46,7 +46,7 @@ public class Game implements GameLogic {
             int endX = endPoint.getX();
             int endY = endPoint.getY();
             return field[startX][startY] == currentPlayColor
-                    && field[endY][endY] == PlayerColor.NONE
+                    && field[endX][endY] == PlayerColor.NONE
                     //for Point 0 / 0
                     && ((startX == 0 && startY == 0 && endX == 0 && endY == 1)
                     || (startX == 0 && startY == 0 && endX == 3 && endY == 0)
