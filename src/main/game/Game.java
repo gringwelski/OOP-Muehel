@@ -23,8 +23,12 @@ public class Game implements GameLogic {
     }
 
     public boolean isValidMove(Move mv) {
+        if ((phase != StoneAction.SET && mv.getStartPoint() == null) || mv.getEndPoint() == null ){
+           return false;
+        }
         // --------------------------------------------- for Phase Set ---------------------------------
         if (phase == StoneAction.SET) {
+
             Point endPoint = mv.getEndPoint();
             return field[endPoint.getX()][endPoint.getY()] == PlayerColor.NONE;
         }
