@@ -313,7 +313,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
     private void waitForAction(Player player, String msg) {
         Platform.runLater(() -> {
             message.setText(msg);
-            alert.setText(player.getName() + " ist am Zug.");
+            alert.setText(player.getName() + " ist am Zug. (" + player.getColor().getColorName() + ")");
         });
 
         synchronized (synchronize) {
