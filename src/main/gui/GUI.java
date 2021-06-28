@@ -331,6 +331,8 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
                 label.setDisable(true);
             } else if (label.getStyleClass().contains(enable)) {
                 label.setDisable(false);
+            } else if (!label.getId().equals("gridpoint")) {
+                label.setDisable(false);
             }
         }
     }
