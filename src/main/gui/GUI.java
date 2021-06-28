@@ -5,7 +5,6 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -13,20 +12,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Line;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import common.*;
 import game.GameLogic;
 import javafx.util.Pair;
 import player.Player;
-
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
 
 public class GUI extends Application implements GUIGame, GUIPlayer {
     private static GridPane grid;
@@ -42,24 +35,23 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
     private static String player1Name = "Spieler 1";
     private static String player2Name = "Spieler 2";
     private static boolean player1AI = false;
-    private static boolean player2AI = false;
-
-    private static StackPane stackPane;
+    private static boolean player2AI = true;
+    private static StackPane squarePane;
 
     @Override
     public void start(Stage stage) {
-        mapping = new ConcurrentHashMap<Point, Point>();
+        mapping = new ConcurrentHashMap<>();
         createMapping();
 
         message = new Label();
         alert = new Label();
 
-        stackPane = new StackPane();
+        squarePane = new StackPane();
         grid = createGrid();
         fill(grid);
 
-        stackPane.getChildren().add(grid);
-        stackPane.setPrefSize(7 * 70, 7 * 70);
+        squarePane.getChildren().add(grid);
+        squarePane.setPrefSize(7 * GUIValues.GRID_CELL_SIZE, 7 * GUIValues.GRID_CELL_SIZE);
 
         alert.setId("alert");
         message.setId("message");
@@ -87,7 +79,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         vbox.getChildren().addAll(menu, alert, message, line, gap);
 
         BorderPane root = new BorderPane();
-        root.setCenter(stackPane);
+        root.setCenter(squarePane);
         root.setTop(vbox);
 
         Scene scene = new Scene(root);
@@ -213,7 +205,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         ObservableList<Node> children = grid.getChildren();
 
         for (Node node : children) {
-            if (grid.getRowIndex(node) == row && grid.getColumnIndex(node) == column && node.getClass() == Label.class) {
+            if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column && node.getClass() == Label.class) {
                 return node;
             }
         }
@@ -272,13 +264,13 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
 
         convertHighscoreLists(playerNames, amountGames, wonGames, first, second, third, fourth, fifth);
 
-        TableColumn<List<String>, String> playerColumn = new TableColumn("Spieler");
+        TableColumn<List<String>, String> playerColumn = new TableColumn<>("Spieler");
         playerColumn.setMinWidth(GUIValues.COLUMN_MIN_WIDTH);
         playerColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().get(0)));
-        TableColumn<List<String>, String> playedGamesColumn = new TableColumn("gespielt");
+        TableColumn<List<String>, String> playedGamesColumn = new TableColumn<>("gespielt");
         playedGamesColumn.setMinWidth(GUIValues.COLUMN_MIN_WIDTH);
         playedGamesColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().get(1)));
-        TableColumn<List<String>, String> wonGamesColumn = new TableColumn("gewonnen");
+        TableColumn<List<String>, String> wonGamesColumn = new TableColumn<>("gewonnen");
         wonGamesColumn.setMinWidth(GUIValues.COLUMN_MIN_WIDTH);
         wonGamesColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().get(2)));
 
@@ -291,9 +283,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         tableView.getItems().addAll(fifth);
 
         highscorePane.setCenter(tableView);
-        Platform.runLater(() -> {
-            grid.add(highscorePane, 0,0, 7, 7);
-        });
+        Platform.runLater(() -> grid.add(highscorePane, 0,0, 7, 7));
 
     }
 
@@ -390,7 +380,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         gridPane.setVgap(GUIValues.GRID_CELL_GAP);
         gridPane.setAlignment(Pos.CENTER);
 
-        Image image = new Image(getClass().getResourceAsStream("/images/board.png"));
+        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/board.png")));
         ImageView imageView = new ImageView(image);
         imageView.setPreserveRatio(true);
         imageView.setFitHeight(Double.MAX_VALUE);
@@ -407,10 +397,9 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
                 Label label = new Label();
                 label.setAlignment(Pos.CENTER);
                 label.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                label.setMinSize(70, 70);
-                label.setFont(new Font(18));
-                label.prefWidthProperty().bind(Bindings.min(stackPane.widthProperty().divide(7), stackPane.heightProperty().divide(7)));
-                label.prefHeightProperty().bind(Bindings.min(stackPane.widthProperty().divide(7), stackPane.heightProperty().divide(7)));
+                label.setMinSize(GUIValues.GRID_CELL_SIZE, GUIValues.GRID_CELL_SIZE);
+                label.prefWidthProperty().bind(Bindings.min(squarePane.widthProperty().divide(7), squarePane.heightProperty().divide(7)));
+                label.prefHeightProperty().bind(Bindings.min(squarePane.widthProperty().divide(7), squarePane.heightProperty().divide(7)));
 
                 try {
                     Point point = getKeyOfMapping(new FieldPoint(r, c));
@@ -456,24 +445,21 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         MenuItem menuItemSettings = new MenuItem("Einstellungen");
         menuGame.getItems().addAll(menuItemNewGame, menuItemSettings, menuItemExit);
 
-        menuItemExit.setOnAction(event -> {
-            System.exit(0);
-        });
+        menuItemExit.setOnAction(event -> System.exit(0));
 
         menuItemNewGame.setOnAction(event -> {
             new Thread(() -> {
                 gameLogic.runGame(player1Name, player1AI, player2Name, player2AI);
             }).start();
-
         });
 
 
         menuItemSettings.setOnAction(event -> {
             Dialog<Pair<List<String>, List<Boolean>>> dialog = new Dialog<>();
             dialog.setTitle("Einstellungen bearbeiten");
-            Label label = new Label("Bitte Spielernamen eingeben. \n" +
-                    "Der erste Spieler spielt mit den schwarzen Steinen. Der zweite mit den schwarzen.\n" +
-                    "Ungültige Werte werden durch vorher eingestellte Werte oder Standardwerte eingesetzt.");
+            Label label = new Label("Der erste Spieler spielt mit den weißen Steinen. Der zweite mit den schwarzen.\n" +
+                    "Ungültige Werte werden durch vorher eingestellte Werte oder Standardwerte eingesetzt.\n" +
+                    "Das Spiel beginnt immer weiß.");
             label.setWrapText(true);
 
             ButtonType startButtonType = new ButtonType("Einstellungen speichern", ButtonBar.ButtonData.OK_DONE);
@@ -506,7 +492,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
             grid.add(textFieldPlayer1, 1, 1);
             grid.add(textFieldPlayer2, 1, 2);
 
-            // third column -> chckbox to select implementation
+            // third column -> checkbox to select implementation
             CheckBox firstPlayerAI = new CheckBox();
             CheckBox secondPlayerAI = new CheckBox();
             firstPlayerAI.setSelected(player1AI);
@@ -518,11 +504,11 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
 
             dialog.setResultConverter(dialogButton -> {
                 if (dialogButton == startButtonType) {
-                    List<String> strings = new ArrayList();
+                    List<String> strings = new ArrayList<>();
                     strings.add(textFieldPlayer1.getText());
                     strings.add(textFieldPlayer2.getText());
 
-                    List<Boolean> bools = new ArrayList();
+                    List<Boolean> bools = new ArrayList<>();
                     bools.add(firstPlayerAI.isSelected());
                     bools.add(secondPlayerAI.isSelected());
 
