@@ -13,12 +13,14 @@ public class RealPlayer implements Player {
     private final PlayerColor color;
     private final GameLogic gameLogic;
     private final GUIPlayer gui;
+    private int madeMoves;
 
     protected RealPlayer(String name, PlayerColor color, GameLogic gameLogic, GUIPlayer gui) {
         this.name = name;
         this.color = color;
         this.gameLogic = gameLogic;
         this.gui = gui;
+        this.madeMoves = 0;
     }
 
     private Move internalMove(String message) {
@@ -29,9 +31,18 @@ public class RealPlayer implements Player {
             message = "Bitte bewege einen Stein";
         if (currentAction == StoneAction.JUMP && message == null)
             message = "Bitte springe mit einem Stein";
-        Move move = gui.setStone(this, message);
-        if (!gameLogic.isValidMove(move))
+        Move move = null;
+        if (currentAction == StoneAction.PUSH || currentAction == StoneAction.JUMP)
+            move = gui.makeManualMove(this, message);
+        else
+            move = gui.setStone(this, message);
+        boolean isValidMove = gameLogic.isValidMove(move);
+        System.out.println(move.toString());
+        System.out.println("Is valid move? " + isValidMove);
+        if (!isValidMove)
             return internalMove("Der stein kann dort nicht platziert werden!");
+
+        madeMoves ++;
         return move;
     }
 
@@ -42,7 +53,16 @@ public class RealPlayer implements Player {
 
     @Override
     public Point selectThrowStone() {
-        return null;
+        Point point;
+        do {
+            point = gui.setStone(this, "Bitte entferne einen Stein des Gegners").getEndPoint();
+        } while (!gameLogic.isThrowStoneValid(point));
+        return point;
+    }
+
+    @Override
+    public boolean isDoneSetting() {
+        return madeMoves >= 9;
     }
 
     @Override

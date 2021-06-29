@@ -34,4 +34,12 @@ public class FieldPoint implements Point {
     public int hashCode() {
         return Objects.hash(getX(), getY());
     }
+
+    @Override
+    public String toString() {
+        return "FieldPoint{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }

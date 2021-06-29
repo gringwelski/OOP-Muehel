@@ -57,4 +57,13 @@ public interface Player {
    * @return Point of the stone that should be thrown
    */
   Point selectThrowStone();
+
+  /**
+   * This method is used internally to know if the player is in the set phase or not. Knowing this should be implemented
+   * by counting all made moves, if these are greater or equals to nine, the player has set all his stones and should
+   * start moving
+   *
+   * @return true if all stones has been placed, false if player is not done placing stones
+   */
+  boolean isDoneSetting();
 }

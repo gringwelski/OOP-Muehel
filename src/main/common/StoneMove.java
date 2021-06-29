@@ -38,4 +38,12 @@ public class StoneMove implements Move {
     public int hashCode() {
         return Objects.hash(getStartPoint(), getEndPoint());
     }
+
+    @Override
+    public String toString() {
+        return "StoneMove{" +
+                "startPoint=" + startPoint +
+                ", endPoint=" + endPoint +
+                '}';
+    }
 }
