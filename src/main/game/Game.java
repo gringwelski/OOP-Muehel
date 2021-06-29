@@ -256,47 +256,47 @@ public class Game implements GameLogic {
 
         return (
                 //Point 0 / 0
-                (x == 0 && y == 0 && (field[0][1] == color && field[0][2] == color) || (field[3][0] == color && field[6][0] == color))
+                (x == 0 && y == 0 && ((field[0][1] == color && field[0][2] == color) || (field[3][0] == color && field[6][0] == color)))
                 //Point 0 / 1
-                || (x == 0 && y == 1 && (field[0][0] == color && field[0][2] == color) || (field[1][1] == color && field[2][1] == color))
+                || (x == 0 && y == 1 && ((field[0][0] == color && field[0][2] == color) || (field[1][1] == color && field[2][1] == color)))
                 //Point 0 / 2
-                || (x == 0 && y == 2 && (field[0][0] == color && field[0][1] == color) || (field[3][5] == color && field[6][2] == color))
+                || (x == 0 && y == 2 && ((field[0][0] == color && field[0][1] == color) || (field[3][5] == color && field[6][2] == color)))
                 //Point 1 / 0
-                || (x == 1 && y == 0 && (field[1][1] == color && field[1][2] == color) || (field[3][1] == color && field[5][0] == color))
+                || (x == 1 && y == 0 && ((field[1][1] == color && field[1][2] == color) || (field[3][1] == color && field[5][0] == color)))
                 //Point 1 / 1
-                || (x == 1 && y == 1 && (field[1][0] == color && field[1][2] == color) || (field[2][1] == color && field[0][1] == color))
+                || (x == 1 && y == 1 && ((field[1][0] == color && field[1][2] == color) || (field[2][1] == color && field[0][1] == color)))
                 //Point 1 / 2
-                || (x == 1 && y == 2 && (field[1][0] == color && field[1][1] == color) || (field[3][4] == color && field[5][2] == color))
+                || (x == 1 && y == 2 && ((field[1][0] == color && field[1][1] == color) || (field[3][4] == color && field[5][2] == color)))
                 //Point 3 / 0
-                || (x == 3 && y == 0 && (field[3][1] == color && field[3][2] == color) || (field[0][0] == color && field[6][0] == color))
+                || (x == 3 && y == 0 && ((field[3][1] == color && field[3][2] == color) || (field[0][0] == color && field[6][0] == color)))
                 //Point 3 / 1
-                || (x == 3 && y == 1 && (field[3][0] == color && field[3][2] == color) || (field[1][0] == color && field[5][0] == color))
+                || (x == 3 && y == 1 && ((field[3][0] == color && field[3][2] == color) || (field[1][0] == color && field[5][0] == color)))
                 //Point 3 / 2
-                || (x == 3 && y == 2 && (field[3][0] == color && field[3][1] == color) || (field[2][0] == color && field[4][0] == color))
+                || (x == 3 && y == 2 && ((field[3][0] == color && field[3][1] == color) || (field[2][0] == color && field[4][0] == color)))
                 //Point 3 / 3
-                || (x == 3 && y == 3 && (field[3][4] == color && field[3][5] == color) || (field[2][2] == color && field[4][2] == color))
+                || (x == 3 && y == 3 && ((field[3][4] == color && field[3][5] == color) || (field[2][2] == color && field[4][2] == color)))
                 //Point 3 / 4
-                || (x == 3 && y == 4 && (field[3][3] == color && field[3][5] == color) || (field[1][2] == color && field[5][2] == color))
+                || (x == 3 && y == 4 && ((field[3][3] == color && field[3][5] == color) || (field[1][2] == color && field[5][2] == color)))
                 //Point 3 / 5
-                || (x == 3 && y == 5 && (field[3][3] == color && field[3][4] == color) || (field[0][2] == color && field[6][2] == color))
+                || (x == 3 && y == 5 && ((field[3][3] == color && field[3][4] == color) || (field[0][2] == color && field[6][2] == color)))
                 //Point 4 / 0
-                || (x == 4 && y == 0 && (field[4][1] == color && field[4][2] == color) || (field[3][2] == color && field[2][0] == color))
+                || (x == 4 && y == 0 && ((field[4][1] == color && field[4][2] == color) || (field[3][2] == color && field[2][0] == color)))
                 //Point 4 / 1
-                || (x == 4 && y == 1 && (field[4][0] == color && field[4][2] == color) || (field[5][1] == color && field[6][1] == color))
+                || (x == 4 && y == 1 && ((field[4][0] == color && field[4][2] == color) || (field[5][1] == color && field[6][1] == color)))
                 //Point 4 / 2
-                || (x == 4 && y == 2 && (field[4][1] == color && field[4][0] == color) || (field[3][3] == color && field[2][2] == color))
+                || (x == 4 && y == 2 && ((field[4][1] == color && field[4][0] == color) || (field[3][3] == color && field[2][2] == color)))
                 //Point 5 / 0
-                || (x == 5 && y == 0 && (field[5][1] == color && field[5][2] == color) || (field[3][1] == color && field[1][0] == color))
+                || (x == 5 && y == 0 && ((field[5][1] == color && field[5][2] == color) || (field[3][1] == color && field[1][0] == color)))
                 //Point 5 / 1
-                || (x == 5 && y == 1 && (field[4][1] == color && field[6][2] == color) || (field[5][0] == color && field[5][2] == color))
+                || (x == 5 && y == 1 && ((field[4][1] == color && field[6][2] == color) || (field[5][0] == color && field[5][2] == color)))
                 //Point 5 / 2
-                || (x == 5 && y == 2 && (field[5][1] == color && field[5][0] == color) || (field[3][4] == color && field[1][2] == color))
+                || (x == 5 && y == 2 && ((field[5][1] == color && field[5][0] == color) || (field[3][4] == color && field[1][2] == color)))
                 //Point 6 / 0
-                || (x == 6 && y == 0 && (field[6][1] == color && field[6][2] == color) || (field[0][0] == color && field[3][0] == color))
+                || (x == 6 && y == 0 && ((field[6][1] == color && field[6][2] == color) || (field[0][0] == color && field[3][0] == color)))
                 //Point 6 / 1
-                || (x == 6 && y == 1 && (field[6][0] == color && field[6][2] == color) || (field[5][1] == color && field[4][1] == color))
+                || (x == 6 && y == 1 && ((field[6][0] == color && field[6][2] == color) || (field[5][1] == color && field[4][1] == color)))
                 //Point 6 / 2
-                || (x == 6 && y == 2 && (field[6][0] == color && field[6][1] == color) || (field[3][5] == color && field[0][2] == color))
+                || (x == 6 && y == 2 && ((field[6][0] == color && field[6][1] == color) || (field[3][5] == color && field[0][2] == color)))
                 );
 
 
