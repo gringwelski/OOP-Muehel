@@ -7,6 +7,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -18,6 +20,8 @@ import common.*;
 import game.GameLogic;
 import javafx.util.Pair;
 import player.Player;
+import sun.security.x509.DeltaCRLIndicatorExtension;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -37,6 +41,9 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
     private static boolean player1AI = false;
     private static boolean player2AI = true;
     private static StackPane squarePane;
+    private static Scene scene;
+    private static Pane dragGround;
+    private static PlayerColor currentColor;
 
     @Override
     public void start(Stage stage) {
@@ -50,7 +57,19 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         grid = createGrid();
         fill(grid);
 
-        squarePane.getChildren().add(grid);
+        Image whiteDrag = new Image(Objects.requireNonNull(
+                getClass().getResourceAsStream("/images/whitestone_drag.png")));
+        Image blackDrag = new Image(Objects.requireNonNull(
+                getClass().getResourceAsStream("/images/blackstone_drag.png")));
+        ImageView imageView = new ImageView(whiteDrag);
+        dragGround = new Pane(imageView);
+        dragGround.setVisible(false);
+        dragGround.setMouseTransparent(true);
+        imageView.setMouseTransparent(true);
+        imageView.fitWidthProperty().bind(Bindings.min(squarePane.widthProperty().divide(7), squarePane.heightProperty().divide(7)));
+        imageView.fitHeightProperty().bind(Bindings.min(squarePane.widthProperty().divide(7), squarePane.heightProperty().divide(7)));
+
+        squarePane.getChildren().addAll(grid, dragGround);
         squarePane.setPrefSize(7 * GUIValues.GRID_CELL_SIZE, 7 * GUIValues.GRID_CELL_SIZE);
 
         alert.setId("alert");
@@ -78,7 +97,22 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         root.setCenter(squarePane);
         root.setTop(vbox);
 
-        Scene scene = new Scene(root);
+        scene = new Scene(root);
+
+        scene.setOnMouseMoved(event -> {
+            Platform.runLater(() -> {
+                if (currentColor == PlayerColor.BLACK) {
+                    imageView.setImage(blackDrag);
+                } else if (currentColor == PlayerColor.WHITE) {
+                    imageView.setImage(whiteDrag);
+                }
+
+                double deltaX = scene.getWidth() - dragGround.getWidth();
+                double deltaY = scene.getHeight() - dragGround.getHeight();
+                imageView.setX(event.getSceneX() - deltaX - (imageView.getFitWidth() / 2));
+                imageView.setY(event.getSceneY() - deltaY - (imageView.getFitHeight() / 2));
+            });
+        });
 
         stage.setScene(scene);
         stage.setTitle("Muehle");
@@ -302,6 +336,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
     public Move makeManualMove(Player player, String msg) {
         firstClick = true;
         singleClick = false;
+        currentColor = player.getColor();
 
         disableFields(player, true);
 
@@ -312,6 +347,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
     @Override
     public Move setStone(Player player, String msg) {
         singleClick = true;
+        currentColor = player.getColor();
 
         disableFields(player, true);
 
@@ -322,6 +358,7 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
     @Override
     public Move takeStone(Player player, String msg) {
         singleClick = true;
+        currentColor = player.getColor();
 
         disableFields(player, false);
 
@@ -417,8 +454,11 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
                             if (firstClick) {
                                 move = new StoneMove(point, new FieldPoint(-1, -1));
                                 firstClick = false;
+                                dragGround.setVisible(true);
                             } else {
                                 move = new StoneMove(move.getStartPoint(), point);
+                                scene.setCursor(Cursor.DEFAULT);
+                                dragGround.setVisible(false);
                                 synchronize.notifyAll();
                             }
                         }
