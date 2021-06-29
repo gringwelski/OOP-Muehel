@@ -63,14 +63,16 @@ public class AIPlayer implements Player {
     public Move makeMove() {
         if (this.opponent == null)
             this.opponent = gameLogic.getPlayers()[0] == this ? gameLogic.getPlayers()[1] : gameLogic.getPlayers()[0];
-        field = gameLogic.getState();
-        int value = max(maxDepth, Integer.MIN_VALUE, Integer.MAX_VALUE);
-        System.out.println("================== EXECUTING SEARCH ==================");
-        System.out.println("Evaluated, maximizing: " + evaluate(true));
-        System.out.println("Evaluated, minimizing: " + evaluate(false));
-        System.out.println("Search value: " + value);
-        System.out.println("Final move: " + finalMove);
-        System.out.println("Is valid move? " + gameLogic.isValidMove(finalMove));
+
+        do {
+            field = gameLogic.getState();
+            int value = max(maxDepth, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            System.out.println("================== EXECUTING SEARCH ==================");
+            System.out.println("Evaluated, maximizing: " + evaluate(true));
+            System.out.println("Evaluated, minimizing: " + evaluate(false));
+            System.out.println("Search value: " + value);
+            System.out.println("Final move: " + finalMove);
+        } while (!gameLogic.isValidMove(finalMove));
 
         try {
             Thread.sleep(300);
@@ -91,6 +93,16 @@ public class AIPlayer implements Player {
     @Override
     public boolean isDoneSetting() {
         return madeMoves >= 9;
+    }
+
+    @Override
+    public void setMoveCount(int count) {
+        madeMoves = count;
+    }
+
+    @Override
+    public int getMoveCount() {
+        return madeMoves;
     }
 
     @Override
@@ -152,20 +164,28 @@ public class AIPlayer implements Player {
         ArrayList<Move> possibleMoves = new ArrayList<>();
 
         // Check if player is in set phase or only has three stones left
-        if (!player.isDoneSetting() || (player.isDoneSetting() && getCountOfStonesFor(player) <= 3)) {
+        if (!player.isDoneSetting()) {
             // Every free field is a possible move
             for (Point point : pointsOfMovement) {
                 if (opponentStonePlacements.contains(point) || selfStonePlacements.contains(point))
                     continue;
                 possibleMoves.add(new StoneMove(null, point));
             }
-        } else {
+        } else if (player.isDoneSetting() && getCountOfStonesFor(player) > 3) {
             // Move is only possible if the neighbour field of a stone is free
             for (Point point : player == opponent ? opponentStonePlacements : selfStonePlacements) {
                 for (Point neighbour : neighbourPoints.get(point)) {
-                    if (opponentStonePlacements.contains(point) || selfStonePlacements.contains(point))
+                    if (opponentStonePlacements.contains(neighbour) || selfStonePlacements.contains(neighbour))
                         continue;
                     possibleMoves.add(new StoneMove(point, neighbour));
+                }
+            }
+        } else {
+            for (Point point : player == opponent ? opponentStonePlacements : selfStonePlacements) {
+                for (Point another : pointsOfMovement) {
+                    if (opponentStonePlacements.contains(point) || selfStonePlacements.contains(point))
+                        continue;
+                    possibleMoves.add(new StoneMove(point, another));
                 }
             }
         }
@@ -253,12 +273,14 @@ public class AIPlayer implements Player {
         if (move.getStartPoint() != null)
             field[move.getStartPoint().getX()][move.getStartPoint().getY()] = PlayerColor.NONE;
         field[move.getEndPoint().getX()][move.getEndPoint().getY()] = player.getColor();
+        player.setMoveCount(player.getMoveCount() + 1);
     }
 
     private void undoMove(Player player, Move move) {
         if (move.getStartPoint() != null)
             field[move.getStartPoint().getX()][move.getStartPoint().getY()] = player.getColor();
         field[move.getEndPoint().getX()][move.getEndPoint().getY()] = PlayerColor.NONE;
+        player.setMoveCount(player.getMoveCount() - 1);
     }
 
     private int max(int depth, int alpha, int beta) {

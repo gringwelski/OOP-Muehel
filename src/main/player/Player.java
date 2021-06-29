@@ -66,4 +66,7 @@ public interface Player {
    * @return true if all stones has been placed, false if player is not done placing stones
    */
   boolean isDoneSetting();
+
+  void setMoveCount(int count);
+  int getMoveCount();
 }

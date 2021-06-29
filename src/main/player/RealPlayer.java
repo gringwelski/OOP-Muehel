@@ -37,8 +37,6 @@ public class RealPlayer implements Player {
         else
             move = gui.setStone(this, message);
         boolean isValidMove = gameLogic.isValidMove(move);
-        System.out.println(move.toString());
-        System.out.println("Is valid move? " + isValidMove);
         if (!isValidMove)
             return internalMove("Der stein kann dort nicht platziert werden!");
 
@@ -63,6 +61,16 @@ public class RealPlayer implements Player {
     @Override
     public boolean isDoneSetting() {
         return madeMoves >= 9;
+    }
+
+    @Override
+    public void setMoveCount(int count) {
+        madeMoves = count;
+    }
+
+    @Override
+    public int getMoveCount() {
+        return madeMoves;
     }
 
     @Override
