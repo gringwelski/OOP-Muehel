@@ -55,8 +55,8 @@ public class RealPlayer implements Player {
     public Point selectThrowStone() {
         Point point;
         do {
-            point = gui.setStone(this, "Bitte entferne einen Stein des Gegners").getEndPoint();
-        } while (!gameLogic.isThrowStoneValid(point));
+            point = gui.takeStone(this, "Bitte entferne einen Stein des Gegners").getEndPoint();
+        } while (!gameLogic.isThrowStoneValid(point, this));
         return point;
     }
 
