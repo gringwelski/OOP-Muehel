@@ -17,7 +17,7 @@ public interface Player {
    * @return Instance of {@link Player}
    */
   static Player create(boolean ai, String name, PlayerColor color, GameLogic game, GUIPlayer gui) {
-    return ai ? new AIPlayer(name, color, game, gui) : new RealPlayer(name, color, game, gui);
+    return ai ? new AIPlayer(name, color, game) : new RealPlayer(name, color, game, gui);
   }
 
   /**
