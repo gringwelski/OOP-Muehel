@@ -3,6 +3,7 @@ import common.Move;
 import common.PlayerColor;
 import common.Point;
 import common.StoneAction;
+import player.Player;
 
 public interface
 GameLogic{
@@ -38,4 +39,10 @@ GameLogic{
      * @return return true if you can throw the stone
      */
     boolean isThrowStoneValid(Point point);
+
+    /**
+     *
+     * @return a list of the 2 players
+     */
+    Player[] getPlayers();
 }

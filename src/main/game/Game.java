@@ -364,7 +364,7 @@ public class Game implements GameLogic {
         return !(field[point.getX()][point.getY()] == currentPlayColor || field[point.getX()][point.getY()] == PlayerColor.NONE || isMuehle(point, enemiesColor));
     }
 
-    Player[] getPlayers(){
+    public Player[] getPlayers(){
 
         return new Player[]{player1, player2};
     }
