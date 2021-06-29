@@ -210,6 +210,7 @@ public class Game implements GameLogic {
             }else{
                 if (remainingStonesP2 < 3) {
                     isLoosed = true;
+                    gui.win(player1);
                     break;
                 }
             }
@@ -238,6 +239,7 @@ public class Game implements GameLogic {
             }
             if (remainingStonesP1 < 3) {
                 isLoosed = true;
+                gui.win(player2);
             }
 
         }
@@ -332,6 +334,11 @@ public class Game implements GameLogic {
                 if (!(field[selectedStone.getX()][selectedStone.getY()] == player.getColor()) || field[selectedStone.getX()][selectedStone.getY()] == PlayerColor.NONE || isMuehle(selectedStone, enemiesColor)) {
                     field[selectedStone.getX()][selectedStone.getY()] = PlayerColor.NONE;
                     System.out.println("true");
+                    if (player.getColor() == PlayerColor.WHITE){
+                        remainingStonesP2 = remainingStonesP2 -1;
+                    }else{
+                        remainingStonesP1 = remainingStonesP1 - 1;
+                    }
 
                 }
             }
