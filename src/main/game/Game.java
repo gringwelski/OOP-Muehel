@@ -355,13 +355,13 @@ public class Game implements GameLogic {
      */
     public boolean isThrowStoneValid(Point point, Player player){
         PlayerColor enemiesColor;
-        if(currentPlayColor == PlayerColor.WHITE) {
+        if(player.getColor() == PlayerColor.WHITE) {
             enemiesColor = PlayerColor.BLACK;
         }else{
             enemiesColor = PlayerColor.WHITE;
         }
 
-        return !(field[point.getX()][point.getY()] == currentPlayColor || field[point.getX()][point.getY()] == PlayerColor.NONE || isMuehle(point, enemiesColor));
+        return !(field[point.getX()][point.getY()] == player.getColor() || field[point.getX()][point.getY()] == PlayerColor.NONE || isMuehle(point, enemiesColor));
     }
 
     public Player[] getPlayers(){
