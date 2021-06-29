@@ -16,6 +16,8 @@ public class Game implements GameLogic {
     private int remainingStonesP2;
     private boolean isLoosed;
     private GUI gui;
+    Player player1;
+    Player player2;
 
     Game(){
         gui = new GUI();
@@ -157,8 +159,8 @@ public class Game implements GameLogic {
         }
         gui.synchronizeGame(field);
         isLoosed = false;
-        Player player1 = Player.create(player1IsAi, namePlayer1, PlayerColor.WHITE, this, gui);
-        Player player2 = Player.create(player2IsAi, namePlayer2, PlayerColor.BLACK, this, gui);
+        player1 = Player.create(player1IsAi, namePlayer1, PlayerColor.WHITE, this, gui);
+        player2 = Player.create(player2IsAi, namePlayer2, PlayerColor.BLACK, this, gui);
         remainingStonesP1 = 9;
         remainingStonesP2 = 9;
 
@@ -184,16 +186,25 @@ public class Game implements GameLogic {
         }
 
         while (!isLoosed) {
-            currentPlayColor = PlayerColor.WHITE;
+            currentPlayColor = player1.getColor();
             //Player 2 Move
             if (remainingStonesP1 > 3) {
                 phase = StoneAction.PUSH;
                 Move mv = player1.makeMove();
+                Point startP = mv.getStartPoint();
+                Point endP = mv.getEndPoint();
+                field[startP.getX()][startP.getY()] = PlayerColor.NONE;
+                field[endP.getX()][endP.getY()] = player1.getColor();
                 gui.synchronizeGame(field);
                 throwIfMuehle(mv.getEndPoint(), player1);
+                gui.synchronizeGame(field);
             } else if (remainingStonesP1 == 3){
                 phase = StoneAction.JUMP;
                 Move mv = player1.makeMove();
+                Point startP = mv.getStartPoint();
+                Point endP = mv.getEndPoint();
+                field[startP.getX()][startP.getY()] = PlayerColor.NONE;
+                field[endP.getX()][endP.getY()] = player1.getColor();
                 gui.synchronizeGame(field);
                 throwIfMuehle(mv.getEndPoint(), player1);
             }else{
@@ -207,13 +218,23 @@ public class Game implements GameLogic {
             if (remainingStonesP2 > 3) {
                 phase = StoneAction.PUSH;
                 Move mv = player2.makeMove();
+                Point startP = mv.getStartPoint();
+                Point endP = mv.getEndPoint();
+                field[startP.getX()][startP.getY()] = PlayerColor.NONE;
+                field[endP.getX()][endP.getY()] = player2.getColor();
                 gui.synchronizeGame(field);
                 throwIfMuehle(mv.getEndPoint(), player2);
+                gui.synchronizeGame(field);
             } else if(remainingStonesP2 == 3){
                 phase = StoneAction.JUMP;
                 Move mv = player2.makeMove();
+                Point startP = mv.getStartPoint();
+                Point endP = mv.getEndPoint();
+                field[startP.getX()][startP.getY()] = PlayerColor.NONE;
+                field[endP.getX()][endP.getY()] = player2.getColor();
                 gui.synchronizeGame(field);
                 throwIfMuehle(mv.getEndPoint(), player2);
+                gui.synchronizeGame(field);
             }
             if (remainingStonesP1 < 3) {
                 isLoosed = true;
@@ -300,26 +321,31 @@ public class Game implements GameLogic {
 
         if (isMuehle(point, player.getColor())) {
             Point selectedStone = player.selectThrowStone();
-            PlayerColor enemiesColor;
-            if (player.getColor() == PlayerColor.WHITE) {
-                enemiesColor = PlayerColor.BLACK;
-            } else {
-                enemiesColor = PlayerColor.WHITE;
-            }
-            int x = selectedStone.getX();
-            int y = selectedStone.getY();
-            System.out.println(x + y);
-            if (!(field[selectedStone.getX()][selectedStone.getY()] == player.getColor())  || field[selectedStone.getX()][selectedStone.getY()] == PlayerColor.NONE || isMuehle(selectedStone, enemiesColor)) {
-                field[selectedStone.getX()][selectedStone.getY()] = PlayerColor.NONE;
-                System.out.println("true");
+            if (selectedStone != null) {
+                PlayerColor enemiesColor;
+                if (player.getColor() == PlayerColor.WHITE) {
+                    enemiesColor = PlayerColor.BLACK;
+                } else {
+                    enemiesColor = PlayerColor.WHITE;
+                }
 
+                if (!(field[selectedStone.getX()][selectedStone.getY()] == player.getColor()) || field[selectedStone.getX()][selectedStone.getY()] == PlayerColor.NONE || isMuehle(selectedStone, enemiesColor)) {
+                    field[selectedStone.getX()][selectedStone.getY()] = PlayerColor.NONE;
+                    System.out.println("true");
+
+                }
+            }
+            else{
+                System.out.println("false");
             }
         }
+
         else{
             System.out.println("false");
             }
 
         }
+
 
 
     /**
@@ -336,5 +362,10 @@ public class Game implements GameLogic {
         }
 
         return !(field[point.getX()][point.getY()] == currentPlayColor || field[point.getX()][point.getY()] == PlayerColor.NONE || isMuehle(point, enemiesColor));
+    }
+
+    Player[] getPlayers(){
+
+        return new Player[]{player1, player2};
     }
 }
