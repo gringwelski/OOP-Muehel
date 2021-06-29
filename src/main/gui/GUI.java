@@ -71,12 +71,8 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         line.setPrefWidth(message.getWidth());
         line.setStyle(GUIValues.BLACK);
 
-        Pane gap = new Pane();
-        gap.setPrefHeight(5);
-        gap.setPrefWidth(message.getWidth());
-
         VBox vbox = new VBox();
-        vbox.getChildren().addAll(menu, alert, message, line, gap);
+        vbox.getChildren().addAll(menu, alert, message, line);
 
         BorderPane root = new BorderPane();
         root.setCenter(squarePane);
@@ -456,13 +452,13 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
 
         menuItemSettings.setOnAction(event -> {
             Dialog<Pair<List<String>, List<Boolean>>> dialog = new Dialog<>();
-            dialog.setTitle("Einstellungen bearbeiten");
+            dialog.setTitle("Einstellungen");
             Label label = new Label("Der erste Spieler spielt mit den weißen Steinen. Der zweite mit den schwarzen.\n" +
                     "Ungültige Werte werden durch vorher eingestellte Werte oder Standardwerte eingesetzt.\n" +
                     "Das Spiel beginnt immer weiß.");
             label.setWrapText(true);
 
-            ButtonType startButtonType = new ButtonType("Einstellungen speichern", ButtonBar.ButtonData.OK_DONE);
+            ButtonType startButtonType = new ButtonType("Speichern", ButtonBar.ButtonData.OK_DONE);
             dialog.getDialogPane().getButtonTypes().addAll(startButtonType, ButtonType.CANCEL);
 
             GridPane grid = new GridPane();
