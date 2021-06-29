@@ -184,35 +184,36 @@ public class Game implements GameLogic {
         while (!isLoosed) {
             currentPlayColor = PlayerColor.WHITE;
             //Player 2 Move
-            if (remainingStonesP1 > 2) {
+            if (remainingStonesP1 > 3) {
                 phase = StoneAction.PUSH;
                 Move mv = player1.makeMove();
                 gui.synchronizeGame(field);
                 throwIfMuehle(mv.getEndPoint(), player1);
-            } else {
+            } else if (remainingStonesP1 == 3){
                 phase = StoneAction.JUMP;
                 Move mv = player1.makeMove();
                 gui.synchronizeGame(field);
                 throwIfMuehle(mv.getEndPoint(), player1);
-            }
-            if (remainingStonesP2 < 2) {
-                isLoosed = true;
-                break;
+            }else{
+                if (remainingStonesP2 < 3) {
+                    isLoosed = true;
+                    break;
+                }
             }
             //Player 2 Move
             currentPlayColor = PlayerColor.BLACK;
-            if (remainingStonesP2 > 2) {
+            if (remainingStonesP2 > 3) {
                 phase = StoneAction.PUSH;
                 Move mv = player2.makeMove();
                 gui.synchronizeGame(field);
                 throwIfMuehle(mv.getEndPoint(), player2);
-            } else {
+            } else if(remainingStonesP2 == 3){
                 phase = StoneAction.JUMP;
                 Move mv = player2.makeMove();
                 gui.synchronizeGame(field);
                 throwIfMuehle(mv.getEndPoint(), player2);
             }
-            if (remainingStonesP1 < 2) {
+            if (remainingStonesP1 < 3) {
                 isLoosed = true;
             }
 
@@ -303,7 +304,9 @@ public class Game implements GameLogic {
             }
             if (!(field[selectedStone.getX()][selectedStone.getY()] == currentPlayColor || field[selectedStone.getX()][selectedStone.getY()] == PlayerColor.NONE || isMuehle(selectedStone, enemiesColor))) {
                 field[selectedStone.getX()][selectedStone.getY()] = PlayerColor.NONE;
+
             }
+
 
         }
     }
