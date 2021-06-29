@@ -38,7 +38,7 @@ GameLogic{
      * @param point the point of the Stone you want to throw away
      * @return return true if you can throw the stone
      */
-    boolean isThrowStoneValid(Point point);
+    boolean isThrowStoneValid(Point point, Player player);
 
     /**
      *

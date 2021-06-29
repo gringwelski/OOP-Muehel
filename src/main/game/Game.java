@@ -353,7 +353,7 @@ public class Game implements GameLogic {
       * @param point the point of the Stone you want to throw away
      * @return return true if you can throw the stone
      */
-    public boolean isThrowStoneValid(Point point){
+    public boolean isThrowStoneValid(Point point, Player player){
         PlayerColor enemiesColor;
         if(currentPlayColor == PlayerColor.WHITE) {
             enemiesColor = PlayerColor.BLACK;
