@@ -28,9 +28,9 @@ public class Game implements GameLogic {
     }
 
     public boolean isValidMove(Move mv) {
-        //if ((phase != StoneAction.SET && mv.getStartPoint() == null) || mv.getEndPoint() == null ){
-        //   return false;
-       // }
+        if ((phase != StoneAction.SET && mv.getStartPoint() == null) || mv.getEndPoint() == null ){
+           return false;
+        }
         // --------------------------------------------- for Phase Set ---------------------------------
         if (phase == StoneAction.SET) {
 
@@ -170,6 +170,7 @@ public class Game implements GameLogic {
                 field[endP.getX()][endP.getY()] = PlayerColor.WHITE;
                 gui.synchronizeGame(field);
                 throwIfMuehle(endP, player1);
+                gui.synchronizeGame(field);
             }
 
             Move mv2 = player2.makeMove();
@@ -178,6 +179,7 @@ public class Game implements GameLogic {
                 field[endP.getX()][endP.getY()] = PlayerColor.BLACK;
                 gui.synchronizeGame(field);
                 throwIfMuehle(endP, player2);
+                gui.synchronizeGame(field);
             }
         }
 
@@ -294,22 +296,31 @@ public class Game implements GameLogic {
      * @param player the player who moved the Stone
      */
     void throwIfMuehle(Point point, Player player) {
-        if (isMuehle(point, currentPlayColor)) {
+        System.out.print("[throwIfMuehle] ");
+
+        if (isMuehle(point, player.getColor())) {
             Point selectedStone = player.selectThrowStone();
             PlayerColor enemiesColor;
-            if (currentPlayColor == PlayerColor.WHITE) {
+            if (player.getColor() == PlayerColor.WHITE) {
                 enemiesColor = PlayerColor.BLACK;
             } else {
                 enemiesColor = PlayerColor.WHITE;
             }
-            if (!(field[selectedStone.getX()][selectedStone.getY()] == currentPlayColor || field[selectedStone.getX()][selectedStone.getY()] == PlayerColor.NONE || isMuehle(selectedStone, enemiesColor))) {
+            int x = selectedStone.getX();
+            int y = selectedStone.getY();
+            System.out.println(x + y);
+            if (!(field[selectedStone.getX()][selectedStone.getY()] == player.getColor())  || field[selectedStone.getX()][selectedStone.getY()] == PlayerColor.NONE || isMuehle(selectedStone, enemiesColor)) {
                 field[selectedStone.getX()][selectedStone.getY()] = PlayerColor.NONE;
+                System.out.println("true");
 
             }
-
+        }
+        else{
+            System.out.println("false");
+            }
 
         }
-    }
+
 
     /**
      *
