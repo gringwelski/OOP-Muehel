@@ -90,12 +90,12 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         line.setPrefWidth(message.getWidth());
         line.setStyle(GUIValues.BLACK);
 
-        VBox vbox = new VBox();
-        vbox.getChildren().addAll(menu, alert, message, line);
+        VBox top = new VBox();
+        top.getChildren().addAll(menu, alert, message, line);
 
         BorderPane root = new BorderPane();
         root.setCenter(squarePane);
-        root.setTop(vbox);
+        root.setTop(top);
 
         scene = new Scene(root);
 
@@ -117,6 +117,10 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
         stage.setScene(scene);
         stage.setTitle("Muehle");
         stage.show();
+
+        stage.setOnCloseRequest(event -> {
+            System.exit(0);
+        });
 
         synchronized (synchronize) {
             synchronize.notifyAll();
@@ -455,10 +459,11 @@ public class GUI extends Application implements GUIGame, GUIPlayer {
                                 move = new StoneMove(point, new FieldPoint(-1, -1));
                                 firstClick = false;
                                 dragGround.setVisible(true);
+                                scene.setCursor(Cursor.NONE);
                             } else {
                                 move = new StoneMove(move.getStartPoint(), point);
-                                scene.setCursor(Cursor.DEFAULT);
                                 dragGround.setVisible(false);
+                                scene.setCursor(Cursor.DEFAULT);
                                 synchronize.notifyAll();
                             }
                         }
